@@ -24,14 +24,26 @@ If Maven Central answers HTTP 429 (common behind shared egress/CI IPs), route it
 Or with EAS: `npx eas-cli build -p android --profile production`.
 
 ## Signing (required before uploading to Play)
-The generated project signs release builds with the **debug keystore** — fine for internal APK testing, **not uploadable** to Play.
+Release builds are signed with the **upload key** when these environment variables are set (config plugin `apps/mobile/plugins/withReleaseSigning.js`); otherwise they fall back to the debug key, which Play rejects.
 
-1. Create an upload key (keep it out of git; back it up securely):
-   ```bash
-   keytool -genkeypair -v -storetype PKCS12 -keystore adultingos-upload.keystore -alias upload -keyalg RSA -keysize 2048 -validity 10000
-   ```
-2. Provide credentials via `~/.gradle/gradle.properties` or CI secrets (`ADULTINGOS_UPLOAD_STORE_FILE`, `…_PASSWORD`, `…_KEY_ALIAS`, `…_KEY_PASSWORD`) and a small config plugin / EAS credentials to use them for `release`.
-3. Enroll in **Play App Signing** on first upload (Google holds the app signing key; you keep the upload key).
+| Variable | Value |
+|---|---|
+| `ADULTINGOS_UPLOAD_STORE_FILE` | absolute path to `adultingos-upload.keystore` |
+| `ADULTINGOS_UPLOAD_STORE_PASSWORD` | keystore password |
+| `ADULTINGOS_UPLOAD_KEY_ALIAS` | `upload` (default) |
+| `ADULTINGOS_UPLOAD_KEY_PASSWORD` | defaults to the store password |
+
+```bash
+APP_ENV=production npx expo prebuild --platform android --clean --no-install
+```
+```bash
+cd apps/mobile/android && ./gradlew bundleRelease --init-script ../../../scripts/maven-central-mirror.gradle
+```
+Output: `apps/mobile/android/app/build/outputs/bundle/release/app-release.aab`.
+
+The upload key was created on 2026-11-25 (alias `upload`, RSA 2048, valid until 2054; SHA-1 `89:F5:8B:E7:25:A9:23:8E:72:8F:38:89:A6:0E:03:71:25:86:99:9B`). **The keystore and its password are never committed.** Keep both in two safe places (e.g. a password manager + an offline drive). With **Play App Signing** (default for new apps) Google holds the app-signing key; if the upload key is lost, request an upload-key reset in Play Console → Setup → App signing.
+
+Bump `version` and `android.versionCode` in `app.config.ts` for every upload — Play rejects a versionCode it has already seen.
 
 ## Release steps
 1. Bump `version` and `android.versionCode` in `app.config.ts`.

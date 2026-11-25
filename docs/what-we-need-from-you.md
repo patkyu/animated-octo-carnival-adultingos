@@ -17,7 +17,7 @@ Everything the code can do without your accounts, keys or decisions is done and 
 |---|---|---|
 | 6 | **Play Console developer account** with identity verification | Required to publish |
 | 7 | Confirm package name **com.adultingos.app** (or choose another) | Reserved on first upload; can never change |
-| 8 | **Upload signing key** — create it yourself (`docs/deployment/mobile-release.md`) and keep it out of git | Current APK/AAB are debug-signed and can't be uploaded |
+| 8 | ✅ **Upload signing key** — created 2026-11-25 and sent to you with its password. **Back both up** (password manager + offline copy); they are not in git or anywhere else permanent | Needed for every future update |
 | 9 | **12+ real testers** for 14 continuous days (if your account is a personal account created after Nov 2023) | Required before production access |
 | 10 | Answers for the content rating, target audience and Data safety forms (draft answers in `docs/privacy/data-safety-worksheet.md`) | Console declarations |
 

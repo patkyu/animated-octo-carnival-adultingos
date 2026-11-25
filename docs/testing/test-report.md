@@ -85,6 +85,8 @@ Found while testing: web exports didn't receive the backend settings (Expo embed
 | Security testing beyond automated checks (pen test) | Out of scope for this environment | Recommended before launch |
 
 ## Android build
+**Upload-signed release (2026-11-25):** `release/adultingos-1.0.0-vc1-upload-signed.aab` (46.1 MB) — signed with the Play upload key (CN=Patricia Mae Quitoriano, O=AdultingOS; SHA-1 `89:F5:8B:E7:…:99:9B`), verified with `jarsigner`/`apksigner`; `com.adultingos.app` 1.0.0 (versionCode 1), targetSdk 36; connected to the Supabase project `vmjinibzebnzaplbqjgb`; 16 KB compatible; no secret keys in the bundle. The table below describes the earlier debug-signed build.
+
 | Item | Result |
 |---|---|
 | Package / version | `com.adultingos.app` 1.0.0 (versionCode 1), APP_ENV=production, no backend configured (runs local-only) |

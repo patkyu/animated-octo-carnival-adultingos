@@ -45,3 +45,16 @@ end $$;
 -- Retention job runs cleanly.
 select public.run_retention();
 rollback;
+
+-- Regression: functions exposed over the API that write data must be VOLATILE
+-- (PostgREST runs STABLE functions read-only). Catches the export_my_data bug.
+do $$
+declare bad text;
+begin
+  select string_agg(p.proname, ', ') into bad
+  from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+  where n.nspname = 'public' and p.provolatile <> 'v'
+    and p.prosrc ~* '\m(insert|update|delete|perform\s+log_audit)\M'
+    and p.prokind = 'f' and p.prorettype <> 'trigger'::regtype;
+  assert bad is null, 'non-volatile functions that write: ' || coalesce(bad, '');
+end $$;

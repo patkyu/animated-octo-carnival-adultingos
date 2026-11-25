@@ -46,7 +46,7 @@ We process your information to provide the service you request (contract), with 
 
 ## Who we share it with
 
-Service providers acting on our instructions: Supabase (database, authentication and server functions; hosting region [region]), and our AI provider, Anthropic, which processes Ask Adu messages to generate answers. [Add the actual crash-reporting or analytics provider here if one is enabled; none is included in this version.]
+Service providers acting on our instructions: Supabase (database, authentication and server functions; hosting region Tokyo, Japan (ap-northeast-1)), and our AI provider, Anthropic, which processes Ask Adu messages to generate answers. [Add the actual crash-reporting or analytics provider here if one is enabled; none is included in this version.]
 
 Google, if you choose Google Sign-In.
 

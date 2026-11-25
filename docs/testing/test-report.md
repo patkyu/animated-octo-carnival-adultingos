@@ -25,6 +25,18 @@ Run on 2026-11-25 in the build container (Linux, Node 22, PostgreSQL 16, Deno 2.
 | Android release build (APK + AAB) | `./gradlew assembleRelease bundleRelease` | ✅ BUILD SUCCESSFUL |
 | 16 KB page size (54 native libs ELF alignment + `zipalign -c -P 16`) | `scripts/check-16kb-alignment.sh` | ✅ compatible |
 
+## Live backend tests (2026-11-26, Supabase project `vmjinibzebnzaplbqjgb`, Tokyo)
+Deployed with the Supabase Management API: 10 migrations, reference seed, `ask-adu` and `delete-account` Edge Functions, Auth redirect URLs and password policy. Tested through the public API with the publishable key, using two temporary test accounts (deleted afterwards; the project was left with 0 users and 0 personal rows).
+
+| Suite | Command | Result |
+|---|---|---|
+| Database & sync over the real API: anonymous access limits, published snapshots, knowledge search, sign-in, sign-up trigger, sync upserts as the app sends them, exactly-once occurrences, last-writer-wins, cross-user isolation (read/write/spoof/export), data export, consent | `node tests/integration/supabase-live.mjs` | ✅ 22/22 |
+| Ask Adu with the real model + deletion: grounded answer with guide citation; unverifiable government question → "couldn't verify" + official site; ID-number redaction (not stored); proposal confirmed exactly once; reporting; AI history deletion; `delete-account` requires confirmation, deletes the user, sign-in then fails | `node tests/integration/ask-adu-live.mjs` | ✅ 16/17 on the final run; the 1 failure was a test counting leftovers from the previous run (fixed); the database confirms each proposal created exactly its 2 tasks |
+
+Bugs found only by testing against real Supabase (both fixed, with local regression tests):
+- **Data export always failed** for signed-in users: `export_my_data()` was `STABLE` but writes an audit row; PostgREST runs stable functions read-only. → `VOLATILE` (migration `…0200`) + a test that flags any non-volatile function that writes.
+- **Ask Adu missed relevant guides** for natural questions: full-text search required every word to match. → match any meaningful term, ranked (migration `…0300`); the moving-out question is now answered from the guide with a citation.
+
 ## Second audit (2026-11-26) — defects found and fixed
 | # | Defect | Impact | Fix | Verified by |
 |---|---|---|---|---|

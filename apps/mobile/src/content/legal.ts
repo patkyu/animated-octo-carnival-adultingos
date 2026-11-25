@@ -56,7 +56,7 @@ export const PRIVACY_POLICY: LegalDoc = {
     {
       heading: 'Who we share it with',
       body: [
-        'Service providers acting on our instructions: Supabase (database, authentication and server functions; hosting region [region]), and our AI provider, Anthropic, which processes Ask Adu messages to generate answers. [Add the actual crash-reporting or analytics provider here if one is enabled; none is included in this version.]',
+        'Service providers acting on our instructions: Supabase (database, authentication and server functions; hosting region Tokyo, Japan (ap-northeast-1)), and our AI provider, Anthropic, which processes Ask Adu messages to generate answers. [Add the actual crash-reporting or analytics provider here if one is enabled; none is included in this version.]',
         'Google, if you choose Google Sign-In.',
         'Authorities, only when required by law.',
         'Notifications are generated on your phone; reminder content is not sent to a push service.',

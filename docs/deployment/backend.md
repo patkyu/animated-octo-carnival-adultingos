@@ -3,7 +3,7 @@
 Use three separate Supabase projects: **development**, **staging**, **production**. Never share keys between them.
 
 ## 1. Create the project
-- Region: Singapore (`ap-southeast-1`) is closest to the Philippines; record it in the privacy policy.
+- Region: Singapore (`ap-southeast-1`) is closest to the Philippines. The current development project (`vmjinibzebnzaplbqjgb`) is in **Tokyo (`ap-northeast-1`)**, which the privacy policy now names. Region can't be changed later — pick it deliberately for production.
 - Enable **Point-in-time recovery** (or daily backups) and set retention ≤ 30 days to match the privacy policy.
 - Enable the `pg_cron` extension (Database → Extensions) so retention runs automatically.
 
@@ -35,6 +35,12 @@ Create staff users in Auth, then (SQL editor, as owner):
 insert into public.admin_roles (user_id, role) values ('<uuid>', 'super_admin');
 ```
 Roles: `super_admin`, `content_editor`, `content_reviewer`, `support_operator`. None grants access to private records or AI conversations.
+
+## Email delivery (required before real users)
+Supabase's built-in e-mail sender only delivers to your own team's addresses and is limited to a few messages per hour, so **real users won't receive verification or password-reset e-mails** until you add custom SMTP (Auth → Emails → SMTP settings) from a provider such as Resend, Postmark or Amazon SES, using a domain you own.
+
+## Applying changes without the CLI
+This repo was deployed through the Supabase Management API (SQL via `POST /v1/projects/{ref}/database/query`, functions via `POST /v1/projects/{ref}/functions/deploy`, applied versions recorded in `supabase_migrations.schema_migrations`), so `supabase db push` will treat them as applied.
 
 ## 6. Verify
 ```bash

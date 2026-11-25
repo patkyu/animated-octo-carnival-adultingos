@@ -5,8 +5,9 @@ Everything the code can do without your accounts, keys or decisions is done and 
 ## 1. Accounts and keys (unblocks sign-in, sync, Ask Adu)
 | # | Item | Why | Where it goes |
 |---|---|---|---|
-| 1 | **Supabase projects** (dev + production; staging recommended), region Singapore | Accounts, cloud backup/sync, Ask Adu, admin portal | Give me the project URL + **anon key** (public). Keep the service-role key to yourself — it's injected into the server automatically |
-| 2 | **Anthropic API key** | Ask Adu answers | Set it yourself as a Supabase secret (`ANTHROPIC_API_KEY`) — never in the app or chat |
+| 1 | ✅ **Development Supabase project** — done (`vmjinibzebnzaplbqjgb`, Tokyo): schema, seed, functions, auth settings deployed and tested. Still needed: a separate **production** project (choose Singapore) before launch | Accounts, sync, Ask Adu | — |
+| 2 | ✅ **Anthropic API key** — done (Supabase secret), verified with live answers | Ask Adu | — |
+| 3a | **Custom SMTP for e-mail** (Resend, Postmark or SES on your domain) → Supabase Auth → Emails → SMTP | Without it real users get **no verification or password-reset e-mails** (built-in sender only reaches your team, a few per hour) | Supabase dashboard |
 | 3 | **Google OAuth web client** (Google Cloud console) | "Continue with Google" | Client ID + secret into Supabase Auth → Providers → Google |
 | 4 | **Support e-mail address** | In-app contact, store listing, privacy policy | `EXPO_PUBLIC_SUPPORT_EMAIL` |
 | 5 | **Domain** (e.g. adultingos.app) + static hosting | Play requires a public privacy policy URL and an account-deletion URL | Host `apps/web-public/dist` |

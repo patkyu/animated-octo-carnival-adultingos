@@ -74,6 +74,9 @@ do $$ begin
   assert (select count(*) from public.guides) = 0, 'users never read live (unreviewed) guide rows';
   assert exists (select 1 from public.search_knowledge('NBI clearance appointment') where slug = 'nbi-clearance'), 'search finds published chunk';
   assert not exists (select 1 from public.search_knowledge('SSS number') where slug = 'sss-membership'), 'unpublished guides are not retrievable';
+  assert exists (select 1 from public.search_knowledge('How do I prepare for moving out? Give me a short checklist.') where slug = 'moving-out'),
+    'natural-language questions retrieve the relevant guide';
+  assert not exists (select 1 from public.search_knowledge('the and of to')), 'stop-words alone match nothing';
   insert into public.content_reports (user_id, guide_id, reason, details)
     values (auth.uid(), (select id from public.published_guides() where slug = 'nbi-clearance'), 'outdated', 'Link changed');
 end $$;

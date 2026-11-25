@@ -1,5 +1,5 @@
-import { router } from 'expo-router';
-import { useEffect, useRef, useState } from 'react';
+import { router, useFocusEffect } from 'expo-router';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { KeyboardAvoidingView, Linking, Platform, Pressable, ScrollView, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AI_DISCLAIMER, GOVERNMENT_DISCLAIMER, uuidv4 } from '@adultingos/shared';
@@ -101,9 +101,16 @@ export default function Assistant() {
     void ensureAnonymousSession().finally(() => setConnecting(false));
   }, [session, online]);
 
-  useEffect(() => {
-    if (session) void hasAiConsent().then(setConsent).catch(() => setConsent(false));
-  }, [session]);
+  // Re-check whenever this tab is shown again — e.g. coming back from the
+  // consent screen (the tab stays mounted, so a mount-only check went stale).
+  useFocusEffect(
+    useCallback(() => {
+      if (!session) return;
+      let live = true;
+      void hasAiConsent().then((v) => live && setConsent(v)).catch(() => live && setConsent(false));
+      return () => { live = false; };
+    }, [session]),
+  );
 
   const send = async (text: string) => {
     const q = text.trim();

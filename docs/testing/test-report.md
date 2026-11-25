@@ -44,8 +44,10 @@ No e-mail, password or SMTP: each installation gets a private Supabase **anonymo
 |---|---|---|
 | Database & sync over the real API with two no-sign-in accounts (e-mail sign-up refused, separate accounts, profile trigger, sync, exactly-once, LWW, isolation, export, consent, deletion of both) | `node tests/integration/supabase-live.mjs` | ✅ 25/25 |
 | Ask Adu + deletion with no-sign-in accounts (grounded answer with citation, unverifiable government question, redaction, exactly-once proposal, report, history deletion, typed-confirmation deletion, deleted token and refresh rejected) | `node tests/integration/ask-adu-live.mjs` | ✅ 19/19 |
-| Real app UI against the live backend: Get started has no e-mail/password; onboarding has no account step; private account created and synced automatically; no "Sign out"; Ask Adu reachable (consent first); account deleted | `node tests/web-smoke/anonymous-account.cjs` | ✅ 6/6 |
+| Real app UI against the live backend: Get started has no e-mail/password; onboarding has no account step; private account created and synced automatically; no "Sign out"; Ask Adu reachable (consent first); after agreeing the chat opens; account deleted | `node tests/web-smoke/anonymous-account.cjs` | ✅ 7/7 |
 | Local-only build (no backend): crawl + 9 journeys with the new Get started screen | `crawl.cjs`, `journeys.cjs` | ✅ |
+
+Found on a real phone (owner, 2026-11-27): after "I understand — continue" the Ask Adu tab kept showing "Review and continue" — consent was saved, but the tab only checked it when first opened. → re-checked whenever the tab is shown; the UI journey reproduces the bug on the old code and passes on the fix.
 
 Found while testing: web exports didn't receive the backend settings (Expo embeds `app.config` extras only in native builds) → `EXPO_PUBLIC_*` fallback in `src/config/env.ts`. Browser pages can't call the Edge Functions unless their origin is in `ALLOWED_WEB_ORIGINS` (by design; the Android app sends no origin).
 

@@ -50,6 +50,11 @@ const OUT = process.argv[2] || 'test-results/anonymous';
     await text('Review and continue').waitFor({ timeout: 20000 });
     await shot('03-ask-adu');
     ok('Ask Adu reachable without signing in (asks for AI consent first)');
+    await btn('Review and continue').click();
+    await btn('I understand — continue').click();
+    await text('Try asking').waitFor({ timeout: 20000 });
+    await shot('03b-chat');
+    ok('After agreeing, the chat opens (suggestions + message box)');
 
     // Delete the account with the app's own session. Edge Functions only accept
     // allow-listed *web* origins (ALLOWED_WEB_ORIGINS), so this call is made

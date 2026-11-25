@@ -1,0 +1,33 @@
+appId: com.adultingos.app.dev
+# Requires a configured backend (EXPO_PUBLIC_SUPABASE_*) and AI gateway, and TEST_EMAIL/TEST_PASSWORD.
+---
+- launchApp
+- tapOn: "Profile"
+- tapOn: "Create account or sign in"
+- tapOn: "E-mail"
+- inputText: ${TEST_EMAIL}
+- tapOn: "Password"
+- inputText: ${TEST_PASSWORD}
+- tapOn: "Sign in"
+- tapOn: "Ask Adu"
+- tapOn: "Review and continue"
+- tapOn: "I understand — continue"
+- tapOn: "What documents do I need for my first job?"
+- assertVisible: "Adu · AI-generated"
+- assertVisible: "Based on verified guides|Couldn't verify.*"
+- tapOn: "Review and choose"
+- tapOn: "Add \\d+"
+- assertVisible: ".*tasks? added.*"
+- tapOn: "Ask Adu"
+- tapOn: "Report this answer"
+- tapOn: "Send report"
+- tapOn: "Profile"
+- tapOn: "Export my data"
+- tapOn: "Export JSON"
+- back
+- tapOn: "Privacy and security"
+- tapOn: "Delete my account"
+- tapOn: "Type DELETE to confirm"
+- inputText: "DELETE"
+- tapOn: "Delete my account permanently"
+- assertVisible: "Adulting, made simpler."

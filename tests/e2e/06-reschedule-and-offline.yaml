@@ -1,0 +1,14 @@
+appId: com.adultingos.app.dev
+---
+- launchApp
+- setAirplaneMode: enabled
+- tapOn: "Add something new"
+- tapOn: "Add Task.*"
+- tapOn: "What needs doing?"
+- inputText: "Offline task"
+- tapOn: "Save"
+- assertVisible: "Saved on this device.*"
+- tapOn: "Reschedule"
+- tapOn: "Tomorrow"
+- assertVisible: "Moved to .*"
+- setAirplaneMode: disabled

@@ -1,0 +1,17 @@
+// Per-invocation init script (passed with --init-script): route Maven Central
+// through Google's public mirror to avoid shared-egress 429 rate limits.
+def MIRROR = 'https://maven-central.storage-download.googleapis.com/maven2/'
+def rewrite = { RepositoryHandler repos ->
+  repos.configureEach { r ->
+    if (r instanceof MavenArtifactRepository && r.url.toString().startsWith('https://repo.maven.apache.org/maven2')) r.url = MIRROR
+  }
+}
+beforeSettings { s ->
+  rewrite(s.pluginManagement.repositories)
+  rewrite(s.buildscript.repositories)
+  s.dependencyResolutionManagement { rewrite(repositories) }
+}
+allprojects {
+  rewrite(buildscript.repositories)
+  rewrite(repositories)
+}

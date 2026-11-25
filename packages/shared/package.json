@@ -1,0 +1,13 @@
+{
+  "name": "@adultingos/shared",
+  "version": "1.0.0",
+  "private": true,
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": { "zod": "^4.6.7" },
+  "devDependencies": { "vitest": "^5.1.1", "typescript": "~6.0.3" }
+}

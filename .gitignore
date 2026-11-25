@@ -1,0 +1,25 @@
+node_modules/
+.expo/
+dist/
+web-build/
+.next/
+*.log
+.env
+.env.*
+!.env.example
+*.keystore
+*.jks
+keystore.properties
+apps/mobile/android/
+apps/mobile/ios/
+coverage/
+.DS_Store
+supabase/.temp/
+apps/admin/out/
+apps/admin/next-env.d.ts
+apps/mobile/dist-web/
+test-results/
+# Generated but published: keep the public site output
+!apps/web-public/dist/
+apps/web-public/dist/config.js
+release/

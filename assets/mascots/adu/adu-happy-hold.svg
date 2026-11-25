@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <ellipse cx="100" cy="188" rx="50" ry="6" fill="#172B36" opacity="0.08"/>
+  <g>
+    <ellipse cx="80" cy="178" rx="11" ry="6" fill="#174B49"/>
+    <ellipse cx="120" cy="178" rx="11" ry="6" fill="#174B49"/>
+    <path d="M 100 58 q -2 -14 4 -24" fill="none" stroke="#174B49" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 104 36 C 112 18 136 18 140 28 C 130 40 112 42 104 36 Z" fill="#91CDB7" stroke="#174B49" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M 101 40 C 92 26 70 26 66 36 C 76 46 94 46 101 40 Z" fill="#91CDB7" stroke="#174B49" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M 50 132 q -14 8 -16 24" fill="none" stroke="#174B49" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 100 56 C 140 56 160 88 158 124 C 156 158 132 176 100 176 C 68 176 44 158 42 124 C 40 88 60 56 100 56 Z" fill="#C9F0DF" stroke="#174B49" stroke-width="4"/>
+    <path d="M 62 92 C 68 76 80 68 92 66" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" opacity="0.7"/>
+    <circle cx="100" cy="150" r="12" fill="#FFFFFF" stroke="#174B49" stroke-width="3"/>
+    <path d="M 94 150 l 4 4 l 8 -8" fill="none" stroke="#174B49" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g>
+    <path d="M 83 108 Q 89 100 95 108" stroke="#172B36" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+    <path d="M 105 108 Q 111 100 117 108" stroke="#172B36" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+    <path d="M 92 120 Q 100 131 108 120" stroke="#172B36" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+    <ellipse cx="80" cy="118" rx="6" ry="3.6" fill="#FF9E9E" opacity="0.55"/>
+    <ellipse cx="120" cy="118" rx="6" ry="3.6" fill="#FF9E9E" opacity="0.55"/>
+  </g>
+  <path d="M 150 132 q 12 4 16 14" fill="none" stroke="#174B49" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <g transform="translate(158 140) rotate(8)">
+    <rect x="-2" y="-4" width="30" height="36" rx="6" fill="#FFFFFF" stroke="#174B49" stroke-width="3"/>
+    <path d="M 4 8 l 4 4 l 8 -8" fill="none" stroke="#174B49" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="5" y1="20" x2="22" y2="20" stroke="#91CDB7" stroke-width="3" stroke-linecap="round"/>
+  </g>
+</svg>

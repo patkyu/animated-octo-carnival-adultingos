@@ -1,0 +1,5 @@
+{
+  "compilerOptions": { "strict": true, "noUncheckedIndexedAccess": false },
+  "nodeModulesDir": "none",
+  "lint": { "rules": { "exclude": ["no-explicit-any"] } }
+}

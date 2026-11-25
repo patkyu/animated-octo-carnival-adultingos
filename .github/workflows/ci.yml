@@ -1,0 +1,99 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-24.04
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U postgres" --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      PGHOST: localhost
+      PGUSER: postgres
+      PGPASSWORD: postgres
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Typecheck (shared, brand, mobile, admin)
+        run: npm run typecheck
+      - name: Unit tests
+        run: npm test
+      - name: Database migrations, RLS and workflow tests
+        run: bash supabase/tests/run.sh
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Edge Functions typecheck + tests
+        working-directory: supabase/functions
+        run: |
+          deno check ask-adu/index.ts delete-account/index.ts
+          deno test ask-adu/adu_test.ts
+      - name: Dependency audit (production deps, high+)
+        run: npm audit --omit=dev --audit-level=high
+      - name: Web build + route crawl + user journeys
+        run: |
+          npx playwright install --with-deps chromium
+          (cd apps/mobile && APP_ENV=development CI=1 npx expo export --platform web --output-dir dist-web)
+          node scripts/serve-web.mjs apps/mobile/dist-web 8089 &
+          sleep 2
+          node tests/web-smoke/crawl.cjs test-results/crawl
+          node tests/web-smoke/journeys.cjs test-results/journeys
+      - name: Admin portal build
+        working-directory: apps/admin
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ci-placeholder
+        run: npx next build
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results
+          path: test-results
+
+  android:
+    runs-on: ubuntu-24.04
+    needs: checks
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - run: npm ci
+      - name: Prebuild + release build (debug-signed unless signing secrets exist)
+        working-directory: apps/mobile
+        env:
+          APP_ENV: production
+          EXPO_PUBLIC_SUPABASE_URL: ${{ vars.EXPO_PUBLIC_SUPABASE_URL }}
+          EXPO_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.EXPO_PUBLIC_SUPABASE_ANON_KEY }}
+        run: |
+          npx expo prebuild --platform android --clean --no-install
+          cd android && ./gradlew assembleRelease bundleRelease
+      - name: 16 KB page-size check
+        run: bash scripts/check-16kb-alignment.sh apps/mobile/android/app/build/outputs/apk/release/app-release.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android-release
+          path: |
+            apps/mobile/android/app/build/outputs/apk/release/*.apk
+            apps/mobile/android/app/build/outputs/bundle/release/*.aab

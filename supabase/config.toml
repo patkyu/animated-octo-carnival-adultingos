@@ -1,0 +1,35 @@
+# Supabase CLI project config (local development). Production settings live in
+# the Supabase dashboard; see docs/deployment/backend.md.
+project_id = "adultingos"
+
+[api]
+schemas = ["public"]
+max_rows = 1000
+
+[auth]
+site_url = "https://adultingos.app"
+additional_redirect_urls = ["adultingos://auth-callback", "https://adultingos.app/delete-account"]
+jwt_expiry = 3600
+enable_refresh_token_rotation = true
+enable_signup = true
+
+[auth.email]
+enable_signup = true
+enable_confirmations = true
+secure_password_change = true
+
+[auth.external.google]
+enabled = true
+client_id = "env(GOOGLE_WEB_CLIENT_ID)"
+secret = "env(GOOGLE_WEB_CLIENT_SECRET)"
+skip_nonce_check = false
+
+[functions.ask-adu]
+verify_jwt = true
+
+[functions.delete-account]
+verify_jwt = true
+
+[db.seed]
+enabled = true
+sql_paths = ["./seeds/01_reference_data.sql"]

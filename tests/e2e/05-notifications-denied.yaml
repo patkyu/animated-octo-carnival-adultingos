@@ -1,0 +1,18 @@
+appId: com.adultingos.app.dev
+# Deny the permission and keep using the app (scenario 8).
+---
+- clearState
+- launchApp:
+    permissions: { notifications: deny }
+- tapOn: "Skip"
+- tapOn: "Use without an account"
+- tapOn: "Continue"
+- tapOn: "Continue"
+- tapOn: "Turn on reminders"
+- assertVisible: "Notifications are off"
+- tapOn: "Continue without notifications"
+- tapOn: "Add a task.*"
+- tapOn: "What needs doing?"
+- inputText: "Pay association dues"
+- tapOn: "Save"
+- assertVisible: "Pay association dues"

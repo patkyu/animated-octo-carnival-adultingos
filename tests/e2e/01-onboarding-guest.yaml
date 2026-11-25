@@ -1,0 +1,17 @@
+appId: com.adultingos.app.dev
+---
+- clearState
+- launchApp
+- tapOn: "Skip"
+- tapOn: "Use without an account"
+- tapOn:
+    id: "What should we call you?"
+    optional: true
+- inputText: "Sam"
+- tapOn: "Continue"
+- tapOn: "Continue"
+- assertVisible: "Friendly reminders"
+- tapOn: "Not now"
+- assertVisible: "You're all set, Sam!"
+- tapOn: "I'll do it later"
+- assertVisible: "Good .*, Sam!"

@@ -1,0 +1,21 @@
+appId: com.adultingos.app.dev
+---
+- launchApp
+- tapOn: "Add something new"
+- tapOn: "Add Bill.*"
+- tapOn: "Bill name"
+- inputText: "Internet"
+- tapOn: "Amount"
+- inputText: "1699"
+- tapOn: "Save bill"
+- tapOn: "Mark as paid"
+- tapOn: "Confirm payment"
+- assertVisible: "Payment history"
+- back
+- tapOn: "Tasks"
+- tapOn: "Bills"
+# exactly one open Internet occurrence
+- assertVisible: "Internet.*"
+- assertNotVisible:
+    text: "Internet.*"
+    index: 1

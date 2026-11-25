@@ -1,0 +1,10 @@
+appId: com.adultingos.app.dev
+---
+- launchApp
+- tapOn: "Guides"
+- tapOn: "Search guides"
+- inputText: "moving out"
+- tapOn: "Moving out: a practical checklist.*"
+- tapOn: "Add steps to my tasks"
+- tapOn: "Add \\d+ steps"
+- assertVisible: ".*added to Tasks.*"

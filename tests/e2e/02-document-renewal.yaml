@@ -1,0 +1,11 @@
+appId: com.adultingos.app.dev
+---
+- launchApp
+- tapOn: "Add something new"
+- tapOn: "Add Document.*"
+- tapOn: "Expiry date.*"
+- tapOn: "OK"           # Android date dialog: accepts the default (today)
+- assertVisible: "Renewal reminders"
+- tapOn: "Save document"
+- assertVisible: "Philippine passport"
+- assertVisible: "Expiring soon|Expires today"

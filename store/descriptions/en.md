@@ -7,17 +7,18 @@ Organize bills, documents, deadlines and everyday life with your AI buddy.  *(74
 
 **Category:** Lifestyle · **Tags:** productivity, planner, reminders
 
-## Full description (≤ 4000 chars)
+## Full description (≤ 4000 chars) — 2,650 chars
 
-> Reviewed against the v1.0 build. Claims removed vs. the original draft are noted at the end. Re-check before each release.
+> Updated for no-sign-in accounts (v1.0). Government guides aren't claimed because none are verified yet; add an OFFICIAL SOURCES section listing official URLs once guides are verified and published.
 
 Life is complicated. Adulting shouldn't be.
 
 Meet AdultingOS, your friendly personal operating system for adulthood.
 
-From paying bills and renewing documents to preparing for your first job, AdultingOS helps you stay organized and understand what to do next.
+From paying bills and renewing documents to preparing for your first job, AdultingOS helps you stay organized and understand what to do next. Keep important responsibilities in one place, build practical checklists, and get friendly reminders before deadlines arrive.
 
-Keep important responsibilities in one place, build practical checklists, and receive friendly reminders before deadlines arrive.
+NO SIGN-UP NEEDED
+No e-mail, no password. Open the app and start. AdultingOS sets up a private account for your phone automatically.
 
 STAY ON TOP OF EVERYDAY LIFE
 Create tasks, organize responsibilities, manage recurring obligations, and see what needs your attention today and this week.
@@ -25,38 +26,25 @@ Create tasks, organize responsibilities, manage recurring obligations, and see w
 NEVER LOSE TRACK OF IMPORTANT DOCUMENTS
 Track renewal dates for IDs and clearances and get reminders 90, 30 and 7 days before they expire. AdultingOS never asks for full ID numbers or photos of your IDs.
 
-ORGANIZE YOUR BILLS
-Keep track of upcoming payments, recurring bills and subscriptions with a simple overview you manage yourself.
+ORGANIZE YOUR BILLS AND SUBSCRIPTIONS
+Keep track of upcoming payments, recurring bills and subscriptions with a simple overview you manage yourself. Mark a bill as paid and the next due date is set for you.
 
 KNOW YOUR NEXT STEP
-Explore practical checklists for everyday adult responsibilities and add the steps to your tasks. Government-related guides link to official sources and show when they were last verified.
+Explore practical checklists for everyday adult responsibilities, like moving out or starting your first job, and add the steps to your tasks in one tap.
 
 MEET YOUR AI ADULTING BUDDY
-Ask Adu for help understanding procedures, creating checklists and organizing your responsibilities. Adu tells you when it can't verify something, and you review suggested tasks before anything is added. (Requires a free account.)
+Ask Adu for help understanding procedures, creating checklists and organizing your responsibilities. Adu tells you when it can't verify something, and you review suggested tasks before anything is added.
 
 MEET THE ADULTING BUDDIES
-Adu, Doki, Piso and their friends make everyday responsibilities feel a little more approachable.
+Adu, Doki, Piso, Tiki, Homi and Sunny make everyday responsibilities feel a little more approachable.
 
 BUILT AROUND YOUR LIFE
-Personalize categories, reminders, quiet hours, appearance and your companion. Works offline, with or without an account.
+Personalize categories, reminders, quiet hours, appearance and your companion. Your tasks and reminders work offline.
 
 PRIVATE BY DESIGN
-No ads. Lock-screen reminders hide details by default. Export or delete your data any time.
+No ads. No e-mail or phone number required. Lock-screen reminders hide details by default. Export or delete your data any time.
 
 Whether you're a student preparing for adulthood, a fresh graduate starting your career, or a busy professional managing everyday responsibilities, AdultingOS helps you take things one step at a time.
 
 DISCLAIMER
-AdultingOS is an independent application and is not affiliated with, endorsed by, or operated by the Philippine government or any government agency.
-Government-related information is provided for general guidance. Users should verify requirements directly through the official sources linked in the application and its store listing.
-AI-generated information may be incomplete or inaccurate and should not replace professional or official advice.
-AdultingOS does not process government applications, execute bank transactions, or provide regulated financial services.
-
-OFFICIAL SOURCES
-[To be appended: only the official URLs of guides that are verified and published in the released build — see docs/privacy/government-source-inventory.md. As of this build, none are verified.]
-
----
-
-### Changes from the original draft copy
-- "Explore practical, source-linked guides covering Philippine government services": softened. Government guides are not published until editors verify them against official sources; if none are verified at launch, remove government guides from this description entirely.
-- Ask Adu: added "(Requires a free account.)" because the assistant runs server-side.
-- Added offline/no-ads/privacy statements that the build supports.
+AdultingOS is an independent application and is not affiliated with, endorsed by, or operated by the Philippine government or any government agency. Government-related information is provided for general guidance; always verify requirements directly through official government sources. AI-generated information may be incomplete or inaccurate and should not replace professional or official advice. AdultingOS does not process government applications, execute bank transactions, or provide regulated financial services.

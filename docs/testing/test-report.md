@@ -18,11 +18,30 @@ Run on 2026-11-25 in the build container (Linux, Node 22, PostgreSQL 16, Deno 2.
 | Edge Functions type check (strict, against real Anthropic/Supabase SDK types) | `deno check …` | ✅ |
 | AI gateway logic (redaction, prompt-injection neutralisation, citation enforcement, uncertainty note, phishing filter, record-access intent) | `deno test ask-adu/adu_test.ts` | ✅ 6/6 |
 | App route crawl — 44 screens in the real app (web renderer, demo data), fails on any page error or React error screen; deleted-item fallback | `node tests/web-smoke/crawl.cjs` | ✅ 44 routes, 0 errors |
-| User journeys in the real UI (fresh profile): onboarding as guest; add monthly bill → pay → **exactly one** next occurrence (Dec 25); paid occurrence listed once; guide → 5 tasks; task create/complete/reopen/delete with confirmation; expired document flagged | `node tests/web-smoke/journeys.cjs` | ✅ 8/8 |
+| User journeys in the real UI (fresh profile): onboarding as guest; add monthly bill → pay → **exactly one** next occurrence (Dec 25); paid occurrence listed once; guide → 5 tasks; task create/complete/reopen/delete with confirmation; expired document flagged; auto-renewing subscription rolls forward | `node tests/web-smoke/journeys.cjs` | ✅ 9/9 |
+| Lint (ESLint, expo config) | `npm run lint -w @adultingos/mobile` | ✅ 0 errors (6 intentional warnings) |
 | Admin portal production build | `next build` | ✅ |
-| Dependency audit (production deps) | `npm audit --omit=dev --audit-level=high` | ✅ no high/critical (3 moderate in `minimatch`, a build-time glob library) |
+| Dependency audit (production deps) | `npm audit --omit=dev --audit-level=high` | ✅ no high/critical (3 moderate in `minimatch`, used only by Expo's build-time fingerprint tool; fix requires a breaking forced downgrade) |
 | Android release build (APK + AAB) | `./gradlew assembleRelease bundleRelease` | ✅ BUILD SUCCESSFUL |
 | 16 KB page size (54 native libs ELF alignment + `zipalign -c -P 16`) | `scripts/check-16kb-alignment.sh` | ✅ compatible |
+
+## Second audit (2026-11-26) — defects found and fixed
+| # | Defect | Impact | Fix | Verified by |
+|---|---|---|---|---|
+| 1 | Notification **Mark done / Snooze** buttons were set not to open the app, but their handlers are JavaScript that only runs in a live app | Tapping them with the app closed silently did nothing | Actions now bring the app up to apply them | Code review (needs device check) |
+| 2 | The last notification tap was re-handled on every launch | App re-navigated to an old item each start | Each response handled once (persisted key) | Code review |
+| 3 | Published guides were read from live tables | An editor's change to a published guide reached users without review | Users read reviewer-published **snapshots** only (`published_guides()`); live tables staff-only | SQL test 40 |
+| 4 | Any editor could mark a source "verified" | Bypassed reviewer verification | Trigger: reviewer-only verification; editing a verified source clears it | SQL test 40 |
+| 5 | That trigger first ran as owner and treated everyone as privileged | Found by the new test | Made `SECURITY INVOKER` | SQL test 40 |
+| 6 | Auto-renewing subscriptions showed "Overdue" until tapped | Wrong status and reminders | Past renewals roll forward at launch/foreground (exactly-once) | Journey 9 |
+| 7 | Time zone only refreshed at cold start | Mistimed reminders after travel | Re-checked whenever the app returns to the foreground | Code review |
+| 8 | `Mascot` called a hook conditionally | Possible crash when toggling animations | Hooks called unconditionally | ESLint `rules-of-hooks` |
+| 9 | Components declared inside render (Ask Adu gate, calendar day list) | Remounts, lost state | Moved to module level | ESLint |
+| 10 | Auth links parsed with `new URL()` on custom schemes | Fragile on Hermes | expo-linking parser | Typecheck |
+| 11 | AI history window could start with an assistant turn | Model API rejects the request | Leading assistant turns trimmed | Deno check |
+| 12 | Four unused native dependencies (AsyncStorage, expo-application, expo-auth-session, expo-device) | Size, extra permission surface | Removed | Android rebuild |
+| 13 | Content stretched edge-to-edge on tablets | Poor tablet layout | 720 dp centred column | Tablet screenshot |
+| 14 | No linter configured | Brief requires lint | ESLint (expo config) in scripts + CI; 0 errors | `npm run lint` |
 
 ## Defects found and fixed during testing
 - expo-sqlite on web lacks exclusive transactions → added a platform-aware `withTx` (Android keeps exclusive transactions).

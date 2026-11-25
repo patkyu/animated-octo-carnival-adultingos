@@ -49,7 +49,7 @@ export default function Guides() {
 
   return (
     <View style={{ flex: 1, backgroundColor: t.c.background }}>
-      <ScrollView contentContainerStyle={{ paddingTop: insets.top + 8, padding: 16, paddingBottom: 120, gap: 14 }} keyboardShouldPersistTaps="handled">
+      <ScrollView contentContainerStyle={{ width: '100%', maxWidth: 720, alignSelf: 'center' as const, paddingTop: insets.top + 8, padding: 16, paddingBottom: 120, gap: 14 }} keyboardShouldPersistTaps="handled">
         <Row gap={12}>
           <Stack gap={2} style={{ flex: 1 }}>
             <AppText variant="title">Guides</AppText>

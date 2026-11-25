@@ -26,7 +26,9 @@ export async function reportGuide(slug: string, reason: GuideReportReason, detai
   const sb = supabase();
   const session = sb ? (await sb.auth.getSession()).data.session : null;
   if (sb && session) {
-    const { data: g } = await sb.from('guides').select('id').eq('slug', slug).maybeSingle();
+    // Users can't read live guide rows; published snapshots carry the id.
+    const { data: rows } = await sb.rpc('published_guides');
+    const g = ((rows ?? []) as { id: string; slug: string }[]).find((r) => r.slug === slug);
     if (g) {
       const { error } = await sb.from('content_reports').insert({ user_id: session.user.id, guide_id: g.id, reason, details: details.slice(0, 1000) });
       if (!error) return 'sent';

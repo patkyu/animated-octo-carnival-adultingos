@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { BILL_CATEGORIES, billInputSchema, firstError, makeRule, minorToInput, parseAmountToMinor, todayInZone, type BillInput, type RecurrenceFrequency } from '@adultingos/shared';
-import { useAppStore } from '@/state/appStore';
 import { AppText, Button, Stack } from '@/ui/primitives';
 import { DateField, FormSection, OffsetsField, Segmented, SelectField, TextField, ToggleRow } from '@/ui/forms';
 import { Notice } from '@/ui/states';

@@ -70,12 +70,36 @@ end $$;
 -- Now visible to users and retrievable.
 select set_config('request.jwt.claim.sub', 'aaaaaaaa-0000-4000-8000-000000000001', true);
 do $$ begin
-  assert (select count(*) from public.guides where slug = 'nbi-clearance') = 1, 'published guide visible';
+  assert (select count(*) from public.published_guides() where slug = 'nbi-clearance') = 1, 'published snapshot visible';
+  assert (select count(*) from public.guides) = 0, 'users never read live (unreviewed) guide rows';
   assert exists (select 1 from public.search_knowledge('NBI clearance appointment') where slug = 'nbi-clearance'), 'search finds published chunk';
   assert not exists (select 1 from public.search_knowledge('SSS number') where slug = 'sss-membership'), 'unpublished guides are not retrievable';
   insert into public.content_reports (user_id, guide_id, reason, details)
-    values (auth.uid(), (select id from public.guides where slug = 'nbi-clearance'), 'outdated', 'Link changed');
+    values (auth.uid(), (select id from public.published_guides() where slug = 'nbi-clearance'), 'outdated', 'Link changed');
 end $$;
+-- Editor edits after publication: users keep seeing the reviewed snapshot.
+select set_config('request.jwt.claim.sub', 'e0000000-0000-4000-8000-00000000000e', true);
+do $$
+declare gid uuid := (select id from public.guides where slug = 'nbi-clearance'); sid uuid;
+begin
+  update public.guides set summary = 'UNREVIEWED EDIT' where id = gid;
+  -- Editors cannot verify sources.
+  begin
+    insert into public.guide_sources (guide_id, title, url, publisher, verified_on) values (gid, 'x', 'https://example.gov.ph', 'x', current_date);
+    raise exception 'editor verified a source';
+  exception when insufficient_privilege then null;
+  end;
+  -- Changing a verified source's URL clears its verification.
+  select id into sid from public.guide_sources where guide_id = gid and verified_on is not null limit 1;
+  update public.guide_sources set url = 'https://changed.example.gov.ph' where id = sid;
+  assert (select verified_on from public.guide_sources where id = sid) is null, 'changed source is unverified';
+end $$;
+select set_config('request.jwt.claim.sub', 'aaaaaaaa-0000-4000-8000-000000000001', true);
+do $$ begin
+  assert (select snapshot -> 'guide' ->> 'summary' from public.published_guides() where slug = 'nbi-clearance') not like '%UNREVIEWED%',
+    'unreviewed edit did not reach users';
+end $$;
+
 reset role;
 do $$ begin
   assert (select count(*) from public.audit_events where target_id = (select id from public.guides where slug = 'nbi-clearance')

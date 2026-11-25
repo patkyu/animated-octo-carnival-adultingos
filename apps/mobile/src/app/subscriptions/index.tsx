@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { SUBSCRIPTION_CATEGORIES, daysBetween, formatMinor, labelFor, relativeDayLabel, relativeDayPhrase, todayInZone } from '@adultingos/shared';
+import { SUBSCRIPTION_CATEGORIES, daysBetween, formatMinor, labelFor, relativeDayPhrase, todayInZone } from '@adultingos/shared';
 import { listSubscriptions } from '@/db/finance';
 import { useData } from '@/lib/useData';
 import { useAppStore } from '@/state/appStore';

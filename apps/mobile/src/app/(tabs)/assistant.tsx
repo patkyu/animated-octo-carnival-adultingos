@@ -68,6 +68,21 @@ function AssistantBubble({ m }: { m: ChatMessage }) {
   );
 }
 
+function Gate({ children }: { children: React.ReactNode }) {
+  const t = useTheme();
+  const insets = useSafeAreaInsets();
+  return (
+    <View style={{ flex: 1, backgroundColor: t.c.background }}>
+      <ScrollView contentContainerStyle={{ padding: 16, paddingTop: insets.top + 16, gap: 16 }}>
+        <AppText variant="title">Ask Adu</AppText>
+        <Mascot id="adu" expression="happy" pose="wave" size={120} style={{ alignSelf: 'center' }} />
+        {children}
+        <Button label="Browse guides instead" icon="book-open" variant="ghost" onPress={() => router.push('/guides')} />
+      </ScrollView>
+    </View>
+  );
+}
+
 export default function Assistant() {
   const t = useTheme();
   const insets = useSafeAreaInsets();
@@ -104,37 +119,24 @@ export default function Assistant() {
     }
   };
 
-  const Gate = ({ children }: { children: React.ReactNode }) => (
-    <ScrollView contentContainerStyle={{ padding: 16, paddingTop: insets.top + 16, gap: 16 }}>
-      <AppText variant="title">Ask Adu</AppText>
-      <Mascot id="adu" expression="happy" pose="wave" size={120} style={{ alignSelf: 'center' }} />
-      {children}
-      <Button label="Browse guides instead" icon="book-open" variant="ghost" onPress={() => router.push('/guides')} />
-    </ScrollView>
-  );
-
   if (!BACKEND_CONFIGURED) {
-    return <View style={{ flex: 1, backgroundColor: t.c.background }}><Gate><Notice title="Ask Adu isn't available in this build">Adu answers on AdultingOS servers, which aren't set up in this version of the app. Your tasks, bills, documents and guides all work without it.</Notice></Gate></View>;
+    return <Gate><Notice title="Ask Adu isn't available in this build">Adu answers on AdultingOS servers, which aren't set up in this version of the app. Your tasks, bills, documents and guides all work without it.</Notice></Gate>;
   }
   if (!session) {
     return (
-      <View style={{ flex: 1, backgroundColor: t.c.background }}>
-        <Gate>
+      <Gate>
           <AppText align="center">Adu can explain procedures, build checklists from verified guides and summarize what's coming up.</AppText>
           <Notice icon="shield">Ask Adu needs an account because answers are generated on our servers.</Notice>
           <Button label="Sign in or create an account" full onPress={() => router.push('/auth/sign-in')} />
-        </Gate>
-      </View>
+      </Gate>
     );
   }
   if (consent === false) {
     return (
-      <View style={{ flex: 1, backgroundColor: t.c.background }}>
-        <Gate>
+      <Gate>
           <AppText align="center">Before your first question, please review how Ask Adu handles your messages.</AppText>
           <Button label="Review and continue" full onPress={() => router.push('/assistant/consent')} />
-        </Gate>
-      </View>
+      </Gate>
     );
   }
 
@@ -145,7 +147,7 @@ export default function Assistant() {
         <IconButton icon="clock" label="Conversation history" onPress={() => router.push('/assistant/history')} />
         <IconButton icon="edit" label="New conversation" onPress={() => reset()} />
       </Row>
-      <ScrollView ref={scroll} contentContainerStyle={{ padding: 16, gap: 16, paddingBottom: 24 }} keyboardShouldPersistTaps="handled" onContentSizeChange={() => scroll.current?.scrollToEnd({ animated: false })}>
+      <ScrollView ref={scroll} contentContainerStyle={{ width: '100%', maxWidth: 720, alignSelf: 'center' as const, padding: 16, gap: 16, paddingBottom: 24 }} keyboardShouldPersistTaps="handled" onContentSizeChange={() => scroll.current?.scrollToEnd({ animated: false })}>
         <OfflineBanner message="You're offline. Adu needs a connection — your saved guides and tasks still work." />
         {!messages.length ? (
           <Stack gap={14}>

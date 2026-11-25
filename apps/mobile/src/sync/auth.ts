@@ -37,6 +37,12 @@ function client() {
 
 export const redirectUri = (path: string) => Linking.createURL(path);
 
+/** Custom-scheme URL parsing via expo-linking (WHATWG URL support for custom schemes varies on Hermes). */
+function queryParam(url: string, name: string): string | null {
+  const v = Linking.parse(url).queryParams?.[name];
+  return typeof v === 'string' && v ? v : null;
+}
+
 export async function initAuth(): Promise<void> {
   const sb = supabase();
   if (!sb) {
@@ -71,7 +77,7 @@ export async function signInWithGoogle(): Promise<Session | null> {
   if (error || !data.url) throw new AuthError(friendly(error));
   const result = await WebBrowser.openAuthSessionAsync(data.url, redirectTo);
   if (result.type !== 'success') return null; // user cancelled
-  const code = new URL(result.url).searchParams.get('code');
+  const code = queryParam(result.url, 'code');
   if (!code) throw new AuthError('Google sign-in did not complete. Please try again.');
   const { data: ex, error: exErr } = await sb.auth.exchangeCodeForSession(code);
   if (exErr || !ex.session) throw new AuthError(friendly(exErr));
@@ -82,12 +88,11 @@ export async function signInWithGoogle(): Promise<Session | null> {
 export async function handleAuthCallbackUrl(url: string): Promise<'signed_in' | 'recovery' | 'none'> {
   const sb = supabase();
   if (!sb) return 'none';
-  const parsed = new URL(url);
-  const code = parsed.searchParams.get('code');
+  const code = queryParam(url, 'code');
   if (!code) return 'none';
   const { error } = await sb.auth.exchangeCodeForSession(code);
   if (error) throw new AuthError('This link has expired. Please request a new one.');
-  return parsed.pathname.includes('reset') ? 'recovery' : 'signed_in';
+  return (Linking.parse(url).path ?? '').includes('reset') ? 'recovery' : 'signed_in';
 }
 
 export async function resendVerification(email: string) {

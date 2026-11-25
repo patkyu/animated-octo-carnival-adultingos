@@ -75,8 +75,13 @@ do $$ begin
     raise exception 'anon read obligations';
   exception when insufficient_privilege then null;
   end;
-  assert (select count(*) from public.guides where status = 'in_review') = 0, 'anon cannot see draft guides';
-  assert (select count(*) from public.guides where status = 'published') >= 1, 'anon can read published guides';
+  begin
+    perform count(*) from public.guides;
+    raise exception 'anon read live guide tables';
+  exception when insufficient_privilege then null;
+  end;
+  assert (select count(*) from public.published_guides()) >= 1, 'anon can read published guide snapshots';
+  assert (select count(*) from public.published_guides() where status = 'in_review') = 0, 'drafts never exposed';
 end $$;
 
 -- Sensitive-number guard on documents.

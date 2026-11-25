@@ -102,7 +102,7 @@ export default function Tasks() {
 
   return (
     <View style={{ flex: 1, backgroundColor: t.c.background }}>
-      <View style={{ paddingTop: insets.top + 8, paddingHorizontal: 16, gap: 12, paddingBottom: 8 }}>
+      <View style={{ width: '100%', maxWidth: 720, alignSelf: 'center' as const, paddingTop: insets.top + 8, paddingHorizontal: 16, gap: 12, paddingBottom: 8 }}>
         <Row style={{ justifyContent: 'space-between' }}>
           <AppText variant="title">Tasks</AppText>
           <Row gap={0}>
@@ -120,7 +120,7 @@ export default function Tasks() {
           <Chip label="Documents" icon="file-text" onPress={() => router.push('/documents')} />
         </ScrollView>
       </View>
-      <ScrollView contentContainerStyle={{ padding: 16, paddingTop: 4, paddingBottom: 140, gap: 12 }} keyboardShouldPersistTaps="handled">
+      <ScrollView contentContainerStyle={{ width: '100%', maxWidth: 720, alignSelf: 'center' as const, padding: 16, paddingTop: 4, paddingBottom: 140, gap: 12 }} keyboardShouldPersistTaps="handled">
         <OfflineBanner />
         {isLoading ? <LoadingList /> : error ? <ErrorState onRetry={() => refetch()} /> : !data?.length ? (
           search || categories.length || kind !== 'all' ? (

@@ -122,6 +122,26 @@ function ok(name) {
     await shot('document-expired');
     ok('Expired document flagged');
 
+    // 7. Auto-renewing subscription rolls forward on launch instead of showing "Overdue"
+    const past = new Date(Date.UTC(y, m - 3, Math.min(d, 28))).toISOString().slice(0, 10);
+    await page.goto(`${BASE}/subscription/new`, { waitUntil: 'networkidle' });
+    await field('Service name').fill('Music app');
+    await field('Price per renewal').fill('149');
+    await field('Next renewal, format year-month-day').fill(past);
+    await btn('Save subscription').click();
+    await text('Next renewal:').waitFor();
+    await page.goto(`${BASE}/subscriptions`, { waitUntil: 'networkidle' }); // relaunch → maintenance runs
+    await page.waitForTimeout(1500);
+    await page.goto(`${BASE}/tasks`, { waitUntil: 'networkidle' });
+    await page.waitForTimeout(1200);
+    const overdueSub = await page.getByRole('button', { name: /^Music app\. Overdue/ }).filter({ visible: true }).count();
+    if (overdueSub !== 0) throw new Error('auto-renewing subscription still shown as overdue');
+    await page.getByRole('radio', { name: 'Done', exact: true }).filter({ visible: true }).last().click();
+    await page.waitForTimeout(800);
+    const renewed = await page.getByRole('button', { name: /^Music app\./ }).filter({ visible: true }).count();
+    if (renewed < 2) throw new Error(`expected past renewals recorded, found ${renewed}`);
+    ok(`Subscription from ${past} rolled forward (${renewed} past renewals recorded, none overdue)`);
+
     if (errors.length) throw new Error(`page errors: ${errors.join(' | ')}`);
     console.log(`\nAll ${steps.length} journey checks passed.`);
   } catch (e) {

@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useRef, useState } from 'react';
 import { Controller, useFieldArray, useForm, type Resolver } from 'react-hook-form';
-import { View } from 'react-native';
+import { View , Platform } from 'react-native';
 import { CUSTOM_UNITS, PRIORITIES, TASK_CATEGORIES, describeRule, taskInputSchema, todayInZone, type TaskInput } from '@adultingos/shared';
 import { kvGet, kvSet } from '@/db/database';
 import { createCustomCategory, listCustomCategories } from '@/db/obligations';
@@ -12,7 +12,6 @@ import { DateField, OffsetsField, Segmented, SelectField, TextField, TimeField, 
 import { Sheet } from '@/ui/overlays';
 import { Notice } from '@/ui/states';
 import { getPermissionState, requestPermission } from '@/notifications/scheduler';
-import { Platform } from 'react-native';
 
 const FREQ_OPTIONS = [
   { value: 'none', label: 'Does not repeat' },

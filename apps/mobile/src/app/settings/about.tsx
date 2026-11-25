@@ -19,7 +19,7 @@ const LICENSES: { name: string; license: string }[] = [
   { name: 'Feather icons (@expo/vector-icons)', license: 'MIT' },
   { name: 'Inter typeface', license: 'SIL Open Font License 1.1' },
   { name: 'Plus Jakarta Sans typeface', license: 'SIL Open Font License 1.1' },
-  { name: 'NetInfo, AsyncStorage, DateTimePicker (React Native Community)', license: 'MIT' },
+  { name: 'NetInfo, DateTimePicker (React Native Community)', license: 'MIT' },
 ];
 
 export default function About() {

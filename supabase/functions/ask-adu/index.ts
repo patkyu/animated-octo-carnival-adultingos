@@ -99,8 +99,12 @@ Deno.serve(async (req) => {
     }
   }
 
+  // The model API requires the conversation to start with a user turn; trim a leading
+  // assistant message that the 6-message window may have cut its question from.
+  const prior = (history ?? []).reverse().map((m: Record<string, unknown>) => ({ role: m.role as 'user' | 'assistant', content: String(m.content) }));
+  while (prior.length && prior[0]!.role !== 'user') prior.shift();
   const messages = [
-    ...((history ?? []).reverse().map((m: Record<string, unknown>) => ({ role: m.role as 'user' | 'assistant', content: String(m.content) }))),
+    ...prior,
     { role: 'user' as const, content: buildUserTurn(message, excerpts, records, today) },
   ];
 
@@ -127,7 +131,9 @@ Deno.serve(async (req) => {
   // Citations come from our own source table, never from model text.
   let citations: Citation[] = [];
   if (final.citedGuideIds.length) {
-    const { data: srcs } = await db.from('guide_sources')
+    // Live source rows are staff-only; read them with the service client, limited to
+    // guides that were actually retrieved from published chunks above.
+    const { data: srcs } = await admin.from('guide_sources')
       .select('guide_id, title, url, verified_on, guides!inner(title)')
       .in('guide_id', final.citedGuideIds).eq('is_official', true).not('verified_on', 'is', null);
     citations = (srcs ?? []).map((s: Record<string, unknown>) => ({

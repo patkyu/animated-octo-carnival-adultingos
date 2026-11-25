@@ -41,6 +41,15 @@ for (const g of GUIDE_PACK) {
     lines.push(`insert into public.guide_sources (guide_id, title, url, publisher, is_official, verified_on) select ${gid}, ${q(s.title)}, ${q(s.url)}, ${q(s.publisher)}, ${s.isOfficial}, ${q(s.verifiedOn)} where not exists (select 1 from public.guide_sources where guide_id = ${gid} and url = ${q(s.url)});`);
   }
   if (g.status === 'published') {
+    // Users read published snapshots (published_guides()); build version 1 exactly like publish_guide().
+    lines.push(
+      `insert into public.guide_versions (guide_id, version, snapshot) select g.id, 1, jsonb_build_object(` +
+        `'guide', to_jsonb(g) - 'status', ` +
+        `'requirements', coalesce((select jsonb_agg(to_jsonb(r) order by r.position) from public.guide_requirements r where r.guide_id = g.id), '[]'), ` +
+        `'steps', coalesce((select jsonb_agg(to_jsonb(s) order by s.position) from public.guide_steps s where s.guide_id = g.id), '[]'), ` +
+        `'sources', coalesce((select jsonb_agg(to_jsonb(s)) from public.guide_sources s where s.guide_id = g.id), '[]')) ` +
+        `from public.guides g where g.slug = ${q(g.slug)} on conflict (guide_id, version) do nothing;`,
+    );
     const chunks: [string, string][] = [
       [`${g.title} — overview`, [g.summary, `Who it is for: ${g.audience}`, `Caveats: ${g.eligibilityCaveats}`, g.helpfulNotes].filter(Boolean).join('\n')],
       ...(g.requirements.length ? [[`${g.title} — what you need`, g.requirements.map((r) => `- ${r}`).join('\n')] as [string, string]] : []),

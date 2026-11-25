@@ -3,8 +3,7 @@ import * as Haptics from 'expo-haptics';
 import type { ComponentProps, ReactNode } from 'react';
 import { ActivityIndicator, Platform, Pressable, StyleSheet, Text, View, type PressableProps, type StyleProp, type TextProps, type TextStyle, type ViewProps, type ViewStyle } from 'react-native';
 import { useTheme } from '@/theme/ThemeProvider';
-import type { TypeVariant } from '@/theme/tokens';
-import type { ColorTokens } from '@/theme/tokens';
+import type { TypeVariant , ColorTokens } from '@/theme/tokens';
 
 export type IconName = ComponentProps<typeof Feather>['name'];
 

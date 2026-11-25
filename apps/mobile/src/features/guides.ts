@@ -18,25 +18,28 @@ async function fetchServerGuides(): Promise<Guide[] | null> {
   if (!sb) return null;
   const net = await NetInfo.fetch();
   if (net.isConnected === false) return null;
-  const { data, error } = await sb
-    .from('guides')
-    .select('*, guide_steps(*), guide_requirements(*), guide_sources(*)')
-    .in('status', ['published', 'needs_update']);
+  // Users only ever see reviewer-published snapshots (see migration 20261126000100).
+  const { data, error } = await sb.rpc('published_guides');
   if (error || !data) return null;
-  const guides: Guide[] = (data as R[]).map((g) => ({
-    slug: String(g.slug), title: String(g.title), category: g.category as GuideCategory, agency: (g.agency as string) ?? undefined, jurisdiction: 'PH',
-    audience: String(g.audience ?? ''), summary: String(g.summary ?? ''), eligibilityCaveats: String(g.eligibility_caveats ?? ''),
-    requirements: ((g.guide_requirements as R[]) ?? []).sort((a, b) => Number(a.position) - Number(b.position)).map((r) => String(r.text)),
-    steps: ((g.guide_steps as R[]) ?? []).sort((a, b) => Number(a.position) - Number(b.position)).map((s) => ({
-      title: String(s.title), body: String(s.body ?? ''), optional: !!s.is_optional, offsetDays: Number(s.suggested_offset_days ?? 0),
-    })),
-    feesText: (g.fees_text as string) ?? null, processingTimeText: (g.processing_time_text as string) ?? null, helpfulNotes: String(g.helpful_notes ?? ''),
-    sources: ((g.guide_sources as R[]) ?? []).map((s): GuideSource => ({
-      title: String(s.title), url: String(s.url), publisher: String(s.publisher), isOfficial: !!s.is_official, verifiedOn: (s.verified_on as string) ?? null,
-    })),
-    related: (g.related_slugs as string[]) ?? [], status: g.status as Guide['status'], contentVersion: Number(g.content_version ?? 0),
-    lastVerifiedOn: (g.last_verified_on as string) ?? null,
-  }));
+  const guides: Guide[] = (data as R[]).map((row) => {
+    const snap = (row.snapshot ?? {}) as R;
+    const g = (snap.guide ?? {}) as R;
+    const byPos = (a: R, b: R) => Number(a.position) - Number(b.position);
+    return {
+      slug: String(row.slug), title: String(g.title ?? ''), category: g.category as GuideCategory, agency: (g.agency as string) ?? undefined, jurisdiction: 'PH',
+      audience: String(g.audience ?? ''), summary: String(g.summary ?? ''), eligibilityCaveats: String(g.eligibility_caveats ?? ''),
+      requirements: ((snap.requirements as R[]) ?? []).sort(byPos).map((r) => String(r.text)),
+      steps: ((snap.steps as R[]) ?? []).sort(byPos).map((st) => ({
+        title: String(st.title), body: String(st.body ?? ''), optional: !!st.is_optional, offsetDays: Number(st.suggested_offset_days ?? 0),
+      })),
+      feesText: (g.fees_text as string) ?? null, processingTimeText: (g.processing_time_text as string) ?? null, helpfulNotes: String(g.helpful_notes ?? ''),
+      sources: ((snap.sources as R[]) ?? []).map((src): GuideSource => ({
+        title: String(src.title), url: String(src.url), publisher: String(src.publisher), isOfficial: !!src.is_official, verifiedOn: (src.verified_on as string) ?? null,
+      })),
+      related: (g.related_slugs as string[]) ?? [], status: row.status as Guide['status'], contentVersion: Number(row.content_version ?? 0),
+      lastVerifiedOn: (row.last_verified_on as string) ?? null,
+    };
+  });
   await kvSet('guides_cache', { at: new Date().toISOString(), guides });
   return guides;
 }

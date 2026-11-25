@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, View } from 'react-native';
+import { Pressable, View , ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { formatDateLong, formatMinor, greetingForMinutes, minutesOfDayInZone, relativeDayLabel, relativeDayPhrase, weekdayShort, expiryCountdown, type LocalDate } from '@adultingos/shared';
 import { MASCOTS } from '@adultingos/brand';
@@ -19,7 +19,6 @@ import { TaskRow } from '@/ui/TaskRow';
 import { RescheduleSheet } from '@/ui/RescheduleSheet';
 import { EmptyState, ErrorState, LoadingList, OfflineBanner } from '@/ui/states';
 import { IS_DEMO } from '@/config/env';
-import { ScrollView } from 'react-native';
 
 function Header() {
   const t = useTheme();
@@ -103,7 +102,7 @@ export default function Home() {
   return (
     <View style={{ flex: 1, backgroundColor: t.c.background }}>
       <Header />
-      <ScrollView contentContainerStyle={{ padding: 16, paddingBottom: 120, gap: 16 }}>
+      <ScrollView contentContainerStyle={{ width: '100%', maxWidth: 720, alignSelf: 'center' as const, padding: 16, paddingBottom: 120, gap: 16 }}>
         <OfflineBanner />
         {sync.status === 'error' ? <StatusBadge label="Sync paused — changes are safe on this device" tone="warning" icon="cloud-off" /> : null}
         {isLoading ? <LoadingList label="Loading your dashboard" /> : error || !data ? <ErrorState onRetry={() => refetch()} /> : (

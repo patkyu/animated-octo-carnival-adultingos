@@ -32,6 +32,8 @@ jobs:
       - run: npm ci
       - name: Typecheck (shared, brand, mobile, admin)
         run: npm run typecheck
+      - name: Lint (mobile)
+        run: npm run lint -w @adultingos/mobile
       - name: Unit tests
         run: npm test
       - name: Database migrations, RLS and workflow tests

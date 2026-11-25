@@ -1,4 +1,3 @@
-import 'expo-crypto'; // provides crypto.getRandomValues for UUIDs
 import { Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_700Bold } from '@expo-google-fonts/inter';
 import { PlusJakartaSans_700Bold, PlusJakartaSans_800ExtraBold } from '@expo-google-fonts/plus-jakarta-sans';
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -11,13 +10,13 @@ import { useEffect, useState } from 'react';
 import { AccessibilityInfo, AppState, Platform, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { getRandomValues } from 'expo-crypto';
-import { getDb, kvGet } from '@/db/database';
+import { getRandomValues } from 'expo-crypto'; // crypto.getRandomValues for UUIDs on Hermes
+import { getDb, kvGet, kvSet } from '@/db/database';
 import { seedDemoIfNeeded } from '@/db/demo';
 import { evaluateAchievements } from '@/db/achievements';
 import { completeOccurrence, getOccurrence } from '@/db/obligations';
-import { getProfile, updateProfile } from '@/db/settings';
 import { openUrl } from '@/features/actions';
+import { runMaintenance } from '@/features/maintenance';
 import { debounce, onDataChanged } from '@/lib/events';
 import { invalidateAll, queryClient } from '@/lib/useData';
 import { reconcileReminders, setupNotificationChannels, snoozeFromNotification } from '@/notifications/scheduler';
@@ -73,10 +72,7 @@ export default function RootLayout() {
       try {
         await getDb();
         await seedDemoIfNeeded();
-        // Keep the stored zone aligned with the device (travel, OFWs).
-        const deviceTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        const p = await getProfile();
-        if (deviceTz && p.timezone !== deviceTz && (await kvGet('tz_auto', true))) await updateProfile({ timezone: deviceTz });
+        await runMaintenance(); // time zone follow + subscription renewals
         await reload();
         await initAuth();
         if (Platform.OS !== 'web') await setupNotificationChannels();
@@ -99,6 +95,7 @@ export default function RootLayout() {
     });
     const sub = AppState.addEventListener('change', (s) => {
       if (s === 'active') {
+        void runMaintenance();
         void syncNow();
         void reconcileReminders();
         void invalidateAll();
@@ -117,6 +114,10 @@ export default function RootLayout() {
   useEffect(() => {
     if (Platform.OS === 'web' || !ready) return;
     const handle = async (resp: Notifications.NotificationResponse) => {
+      // getLastNotificationResponse() keeps returning the same tap on every launch; handle each once.
+      const key = `${resp.notification.request.identifier}:${resp.actionIdentifier}:${resp.notification.date}`;
+      if ((await kvGet<string | null>('last_handled_notification', null)) === key) return;
+      await kvSet('last_handled_notification', key);
       const data = resp.notification.request.content.data as { url?: string; occurrenceId?: string | null };
       if (resp.actionIdentifier === 'done' && data.occurrenceId) {
         const occ = await getOccurrence(data.occurrenceId);

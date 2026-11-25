@@ -38,7 +38,9 @@ export function Mascot({
   id: MascotId; expression?: Expression; pose?: Pose; size?: number; animation?: MascotAnimation; label?: string; style?: StyleProp<ViewStyle>; force?: boolean;
 }) {
   const show = useAppStore((s) => s.prefs.showMascots);
-  const animate = useAppStore((s) => s.prefs.mascotAnimations) && !useReducedMotion() && animation !== 'none';
+  const animationsOn = useAppStore((s) => s.prefs.mascotAnimations);
+  const reduceMotion = useReducedMotion(); // hooks must run unconditionally
+  const animate = animationsOn && !reduceMotion && animation !== 'none';
   const y = useSharedValue(0);
   const scale = useSharedValue(1);
 

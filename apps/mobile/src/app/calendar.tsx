@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react';
 import { Pressable } from 'react-native';
 import { addDays, addMonthsAnchored, formatDateLong, startOfMonth, startOfWeek, todayInZone, weekdayShort, type LocalDate } from '@adultingos/shared';
 import { listItems, type Item } from '@/db/obligations';
-import { listDocuments } from '@/db/documents';
+import { listDocuments, type DocumentRecord } from '@/db/documents';
 import { toggleItem } from '@/features/actions';
 import { useData } from '@/lib/useData';
 import { useAppStore } from '@/state/appStore';
@@ -17,6 +17,22 @@ import { LoadingList } from '@/ui/states';
 
 type View_ = 'month' | 'week' | 'agenda';
 type Filter = 'all' | 'task' | 'bill' | 'subscription' | 'document';
+
+function DayList({ d, items: all, docs: allDocs }: { d: LocalDate; items: Item[]; docs: DocumentRecord[] }) {
+  const items = all.filter((i) => i.dueDate === d);
+  const docs = allDocs.filter((x) => x.expiryDate === d);
+  if (!items.length && !docs.length) return <AppText color="textMuted">Nothing due.</AppText>;
+  return (
+    <Stack gap={8}>
+      {docs.map((doc) => (
+        <Card key={doc.id} tone="catDocuments" onPress={() => router.push(`/document/${doc.id}`)} accessibilityLabel={`${doc.name} expires`}>
+          <Row gap={10}><Icon name="file-text" color="onCategory" /><AppText variant="bodyStrong" color="onCategory">{doc.name} expires</AppText></Row>
+        </Card>
+      ))}
+      {items.map((i) => <TaskRow key={i.id} item={i} onToggle={toggleItem} />)}
+    </Stack>
+  );
+}
 
 export default function Calendar() {
   const t = useTheme();
@@ -36,8 +52,8 @@ export default function Calendar() {
     return { items, docs: docs.filter((d) => d.expiryDate && d.expiryDate >= range.from && d.expiryDate <= range.to) };
   });
 
-  const visibleItems = (data?.items ?? []).filter((i) => filter === 'all' || i.kind === filter);
-  const visibleDocs = filter === 'all' || filter === 'document' ? data?.docs ?? [] : [];
+  const visibleItems = useMemo(() => (data?.items ?? []).filter((i) => filter === 'all' || i.kind === filter), [data, filter]);
+  const visibleDocs = useMemo(() => (filter === 'all' || filter === 'document' ? data?.docs ?? [] : []), [data, filter]);
 
   const marks = useMemo(() => {
     const m = new Map<LocalDate, DayMarks>();
@@ -53,24 +69,6 @@ export default function Calendar() {
     return m;
   }, [visibleItems, visibleDocs, today]);
 
-  const dayItems = (d: LocalDate) => visibleItems.filter((i) => i.dueDate === d);
-  const dayDocs = (d: LocalDate) => visibleDocs.filter((x) => x.expiryDate === d);
-
-  const DayList = ({ d }: { d: LocalDate }) => {
-    const items: Item[] = dayItems(d);
-    const docs = dayDocs(d);
-    if (!items.length && !docs.length) return <AppText color="textMuted">Nothing due.</AppText>;
-    return (
-      <Stack gap={8}>
-        {docs.map((doc) => (
-          <Card key={doc.id} tone="catDocuments" onPress={() => router.push(`/document/${doc.id}`)} accessibilityLabel={`${doc.name} expires`}>
-            <Row gap={10}><Icon name="file-text" color="onCategory" /><AppText variant="bodyStrong" color="onCategory">{doc.name} expires</AppText></Row>
-          </Card>
-        ))}
-        {items.map((i) => <TaskRow key={i.id} item={i} onToggle={toggleItem} />)}
-      </Stack>
-    );
-  };
 
   return (
     <Screen title="Calendar">
@@ -84,7 +82,7 @@ export default function Calendar() {
         <>
           <Card><MonthGrid month={month} selected={selected} today={today} marks={marks} onSelect={setSelected} onPrev={() => setMonth(addMonthsAnchored(month, -1, 1))} onNext={() => setMonth(addMonthsAnchored(month, 1, 1))} /></Card>
           <AppText variant="section">{formatDateLong(selected)}</AppText>
-          <DayList d={selected} />
+          <DayList d={selected} items={visibleItems} docs={visibleDocs} />
         </>
       ) : view === 'week' ? (
         <>
@@ -97,7 +95,7 @@ export default function Calendar() {
               <Pressable onPress={() => setSelected(d)} accessibilityRole="header">
                 <AppText variant="supportStrong" color={d === today ? 'primary' : 'textMuted'}>{weekdayShort(d)} · {formatDateLong(d)}{d === today ? ' · Today' : ''}</AppText>
               </Pressable>
-              <DayList d={d} />
+              <DayList d={d} items={visibleItems} docs={visibleDocs} />
             </Stack>
           ))}
         </>
@@ -106,7 +104,7 @@ export default function Calendar() {
           {[...new Set([...visibleItems.filter((i) => i.status === 'open').map((i) => i.dueDate), ...visibleDocs.map((x) => x.expiryDate!)])].sort().map((d) => (
             <Stack key={d} gap={6}>
               <AppText variant="supportStrong" color="textMuted">{formatDateLong(d)}</AppText>
-              <DayList d={d} />
+              <DayList d={d} items={visibleItems} docs={visibleDocs} />
             </Stack>
           ))}
           {!visibleItems.some((i) => i.status === 'open') && !visibleDocs.length ? <AppText color="textMuted">Nothing in the next 60 days.</AppText> : null}

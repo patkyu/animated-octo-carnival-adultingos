@@ -1,10 +1,9 @@
 import { router } from 'expo-router';
-import { BILL_CATEGORIES, FINANCE_DISCLAIMER, formatMinor, formatMonthYear, labelFor, todayInZone } from '@adultingos/shared';
+import { BILL_CATEGORIES, FINANCE_DISCLAIMER, formatMinor, formatMonthYear, labelFor } from '@adultingos/shared';
 import { listBills, financeOverview } from '@/db/finance';
 import { listItems } from '@/db/obligations';
 import { toggleItem } from '@/features/actions';
 import { useData } from '@/lib/useData';
-import { useAppStore } from '@/state/appStore';
 import { useTheme } from '@/theme/ThemeProvider';
 import { View } from 'react-native';
 import { AppText, Button, Card, Row, Stack } from '@/ui/primitives';
@@ -16,8 +15,6 @@ import { isEnabled } from '@/config/env';
 
 export default function Bills() {
   const t = useTheme();
-  const tz = useAppStore((s) => s.profile.timezone);
-  const today = todayInZone(tz);
   const { data, isLoading, error, refetch } = useData(['bills-overview'], async () => {
     const [bills, overview, upcoming] = await Promise.all([listBills(), financeOverview(), listItems({ kinds: ['bill'], status: 'open' })]);
     const seen = new Set<string>();

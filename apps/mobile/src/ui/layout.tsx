@@ -44,7 +44,7 @@ export function Screen({
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         {scroll ? (
           <ScrollView
-            contentContainerStyle={[{ padding: 16, paddingBottom: insets.bottom + 120, gap: 16 }, contentStyle]}
+            contentContainerStyle={[{ width: '100%', maxWidth: 720, alignSelf: 'center' as const, padding: 16, paddingBottom: insets.bottom + 120, gap: 16 }, contentStyle]}
             keyboardShouldPersistTaps="handled"
             refreshControl={onRefresh ? <RefreshControl refreshing={!!refreshing} onRefresh={onRefresh} tintColor={t.c.primary} colors={[t.c.primary]} /> : undefined}
             {...scrollProps}
@@ -52,7 +52,7 @@ export function Screen({
             {body}
           </ScrollView>
         ) : (
-          <View style={[{ flex: 1, padding: 16, gap: 16 }, contentStyle]}>{body}</View>
+          <View style={[{ flex: 1, width: '100%', maxWidth: 720, alignSelf: 'center' as const, padding: 16, gap: 16 }, contentStyle]}>{body}</View>
         )}
         {footer ? (
           <View style={{ padding: 16, paddingBottom: insets.bottom + 16, borderTopWidth: StyleSheet.hairlineWidth, borderColor: t.c.border, backgroundColor: t.c.background }}>{footer}</View>

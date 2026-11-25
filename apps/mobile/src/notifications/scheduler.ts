@@ -51,8 +51,10 @@ export async function setupNotificationChannels(): Promise<void> {
   }
   if (Platform.OS !== 'web') {
     await Notifications.setNotificationCategoryAsync('obligation', [
-      { identifier: 'done', buttonTitle: 'Mark done', options: { opensAppToForeground: false } },
-      { identifier: 'snooze', buttonTitle: 'Snooze 1 hour', options: { opensAppToForeground: false } },
+      // The handlers are JavaScript, which only runs while the app process is alive, so the
+      // actions bring the app up briefly to apply them (a closed app would otherwise ignore the tap).
+      { identifier: 'done', buttonTitle: 'Mark done', options: { opensAppToForeground: true } },
+      { identifier: 'snooze', buttonTitle: 'Snooze 1 hour', options: { opensAppToForeground: true } },
     ]);
   }
 }

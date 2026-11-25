@@ -4,10 +4,9 @@ import { DOCUMENT_STATUS_LABEL, todayInZone, type DocumentStatus } from '@adulti
 import { listDocuments } from '@/db/documents';
 import { useData } from '@/lib/useData';
 import { useAppStore } from '@/state/appStore';
-import { AppText, Card, Row } from '@/ui/primitives';
+import { AppText, Card, Row , Stack } from '@/ui/primitives';
 import { DocumentCard } from '@/ui/DocumentCard';
 import { Segmented } from '@/ui/forms';
-import { Stack } from '@/ui/primitives';
 import { Fab, Screen } from '@/ui/layout';
 import { Mascot } from '@/ui/Mascot';
 import { EmptyState, ErrorState, LoadingList } from '@/ui/states';

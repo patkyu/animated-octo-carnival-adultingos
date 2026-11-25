@@ -28,7 +28,7 @@ export default function Register() {
       if (needsVerification) router.replace({ pathname: '/auth/verify', params: { email: email.trim() } });
       else {
         const { data } = await supabase()!.auth.getSession();
-        if (data.session) await continueAfterSignIn(data.session.user.id, () => router.replace('/auth/sign-in'));
+        if (data.session) await continueAfterSignIn(data.session.user.id, () => router.replace('/auth/account'));
       }
     } catch (e) {
       setErrors({ form: e instanceof AuthError ? e.message : 'Something went wrong. Please try again.' });

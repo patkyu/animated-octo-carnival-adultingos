@@ -5,7 +5,7 @@ appId: com.adultingos.app.dev
 - launchApp:
     permissions: { notifications: deny }
 - tapOn: "Skip"
-- tapOn: "Use without an account"
+- tapOn: "Get started"
 - tapOn: "Continue"
 - tapOn: "Continue"
 - tapOn: "Turn on reminders"

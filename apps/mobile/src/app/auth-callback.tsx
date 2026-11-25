@@ -17,8 +17,8 @@ export default function AuthCallback() {
         const url = (await Linking.getInitialURL()) ?? `adultingos://auth-callback?code=${params.code ?? ''}`;
         await handleAuthCallbackUrl(url.includes('code=') ? url : `adultingos://auth-callback?code=${params.code ?? ''}`);
         const { data } = (await supabase()?.auth.getSession()) ?? { data: { session: null } };
-        if (data.session) await continueAfterSignIn(data.session.user.id, () => router.replace('/auth/sign-in'));
-        else router.replace('/auth/sign-in');
+        if (data.session) await continueAfterSignIn(data.session.user.id, () => router.replace('/auth/account'));
+        else router.replace('/auth/account');
       } catch (e) {
         setError(e instanceof AuthError ? e.message : 'This link could not be used.');
       }
@@ -26,7 +26,7 @@ export default function AuthCallback() {
   }, [params.code]);
   return (
     <Screen title="Signing you in" back={false}>
-      {error ? <ErrorState title="Link didn't work" body={error} onRetry={() => router.replace('/auth/sign-in')} /> : <LoadingList rows={2} label="Signing you in" />}
+      {error ? <ErrorState title="Link didn't work" body={error} onRetry={() => router.replace('/auth/account')} /> : <LoadingList rows={2} label="Signing you in" />}
     </Screen>
   );
 }

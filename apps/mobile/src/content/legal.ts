@@ -27,7 +27,7 @@ export const PRIVACY_POLICY: LegalDoc = {
     {
       heading: 'What we collect',
       body: [
-        'Account data (only if you create an account): your e-mail address and a password managed by our authentication provider, or your Google account e-mail if you use Google Sign-In.',
+        'Account data: AdultingOS does not ask for your e-mail, phone number or a password. When you start using the app online, it creates a private account identified only by a random ID, linked to this installation by a sign-in token stored in Android\'s secure keystore. We also receive the IP address of each request, as any internet service does.',
         'Information you enter: tasks, bills and payment records you type in, subscriptions, document metadata (type, issuer, issue and expiry dates, and at most the last 4 characters of a reference number), notes, checklists and categories. We do not ask for or store full government ID numbers, photos or scans of IDs, bank credentials, or card numbers.',
         'Optional profile answers: preferred name, language, time zone, employment status, living arrangement, areas of interest and favorite mascot. You can skip all of them.',
         'Ask Adu: the questions you send and the answers generated, plus your consent choices. Long numbers are removed from messages before processing.',
@@ -36,8 +36,8 @@ export const PRIVACY_POLICY: LegalDoc = {
       ],
     },
     {
-      heading: 'Guest use',
-      body: ['You can use AdultingOS without an account. Your information then stays only on your phone and is not sent to us, except guide content your phone downloads.'],
+      heading: 'Before your account connects',
+      body: ['Until the app is online and your private account is set up, your information stays only on your phone and is not sent to us, except requests for guide content. If this version of the app has no server configured, everything stays on your phone.'],
     },
     {
       heading: 'How we use it',
@@ -57,7 +57,6 @@ export const PRIVACY_POLICY: LegalDoc = {
       heading: 'Who we share it with',
       body: [
         'Service providers acting on our instructions: Supabase (database, authentication and server functions; hosting region Tokyo, Japan (ap-northeast-1)), and our AI provider, Anthropic, which processes Ask Adu messages to generate answers. [Add the actual crash-reporting or analytics provider here if one is enabled; none is included in this version.]',
-        'Google, if you choose Google Sign-In.',
         'Authorities, only when required by law.',
         'Notifications are generated on your phone; reminder content is not sent to a push service.',
       ],
@@ -72,7 +71,7 @@ export const PRIVACY_POLICY: LegalDoc = {
     {
       heading: 'Retention',
       body: [
-        'Your records are kept while your account exists. Deleted records are removed from sync within 90 days. AI conversations idle for 12 months are deleted automatically, and you can delete them any time. Audit logs (which contain no content) are kept for 24 months.',
+        'Your records are kept while your account exists. Because there is no sign-in, an account cannot be recovered once the app is uninstalled or its data is cleared; accounts with no activity for 12 months are deleted automatically with all their data. Deleted records are removed from sync within 90 days. AI conversations idle for 12 months are deleted automatically, and you can delete them any time. Audit logs (which contain no content) are kept for 24 months.',
         'When you delete your account, your personal data is deleted immediately from our database; backups are overwritten within [30] days. We keep a record that a deletion happened (without your identity) and the text of feedback or reports you sent, with your identity removed.',
       ],
     },
@@ -80,7 +79,7 @@ export const PRIVACY_POLICY: LegalDoc = {
       heading: 'Your rights',
       body: [
         'Under the Data Privacy Act you may be informed, access, correct, object, have your data erased or blocked, receive a copy (data portability), and file a complaint with the National Privacy Commission.',
-        'In the app: edit your profile and records at any time; Settings → Export my data (JSON and CSV); Settings → Privacy to withdraw AI consent or delete AI history; Settings → Delete account. Without the app, use [https://adultingos.app/delete-account] or e-mail [dpo e-mail address].',
+        'In the app: edit your profile and records at any time; Settings → Export my data (JSON and CSV); Settings → Privacy to withdraw AI consent or delete AI history; Settings → Delete account. If you no longer have the app, your account can no longer be used by anyone and is deleted automatically after 12 months of inactivity; you can also contact us at [dpo e-mail address] through [https://adultingos.app/delete-account].',
       ],
     },
     {
@@ -122,12 +121,12 @@ export const TERMS: LegalDoc = {
 };
 
 export const FAQ: { q: string; a: string }[] = [
-  { q: 'Do I need an account?', a: 'No. You can use AdultingOS on one phone without an account. An account adds backup, sync across devices and Ask Adu. If you sign up later, your existing items move over without duplicates.' },
+  { q: 'Do I need to sign up?', a: 'No. There is no e-mail or password. AdultingOS sets up a private account for your phone automatically, so your items sync to the cloud and Ask Adu works. The catch: without a sign-in, that account can\'t be recovered if you uninstall the app, clear its data or change phones — use Settings → Export my data now and then.' },
   { q: 'Is AdultingOS a government app?', a: 'No. It is an independent app and is not affiliated with any government agency. Guides link to official sources — always confirm requirements there.' },
   { q: 'Why can I only enter the last 4 characters of an ID number?', a: 'To protect you. AdultingOS never stores full ID numbers, scans or photos of IDs.' },
   { q: 'Why didn\'t I get a reminder?', a: 'Check that notifications are allowed for AdultingOS in Android settings and in Settings → Notifications, and that the item has reminders set. Reminders during quiet hours arrive when quiet hours end. Battery savers can delay reminders by a few minutes.' },
   { q: 'What happens when I mark a recurring bill as paid?', a: 'The payment is recorded and exactly one next due date is created. Monthly bills on the 29th–31st fall on the last day of shorter months.' },
   { q: 'Can AdultingOS pay my bills or cancel subscriptions?', a: 'No. It only tracks what you enter. Pay or cancel with the provider, then record it in the app.' },
   { q: 'How accurate is Ask Adu?', a: 'Adu answers from guides our editors have verified and tells you when it couldn\'t verify something. It can still be wrong — check official sources, and use “Report this answer” if something looks off.' },
-  { q: 'How do I delete my data?', a: 'Settings → Privacy and security. You can delete AI conversations, individual records, or your whole account. Signed-out users can delete all data on the device.' },
+  { q: 'How do I delete my data?', a: 'Settings → Privacy and security. You can delete AI conversations, individual records, or your whole account. If the app never connected, you can delete all data on the device there too.' },
 ];

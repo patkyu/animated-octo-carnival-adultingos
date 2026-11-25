@@ -23,7 +23,7 @@ export default function DeleteAccount() {
       <Card>
         <Stack gap={8}>
           <AppText variant="section">What will be deleted</AppText>
-          <AppText>• Your account and sign-in details</AppText>
+          <AppText>• Your private account</AppText>
           <AppText>• All tasks, bills, payments, documents and subscriptions</AppText>
           <AppText>• Your profile, settings, achievements and consent history</AppText>
           <AppText>• All conversations with Ask Adu</AppText>

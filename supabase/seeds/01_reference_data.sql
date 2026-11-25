@@ -19,6 +19,7 @@ insert into public.feature_flags (key, enabled, description) values ('ai_assista
 insert into public.feature_flags (key, enabled, description) values ('subscriptions', true, 'Subscription tracker.') on conflict (key) do nothing;
 insert into public.feature_flags (key, enabled, description) values ('achievements', true, 'Adulting Milestones achievements.') on conflict (key) do nothing;
 insert into public.feature_flags (key, enabled, description) values ('guides_unverified_preview', false, 'Show draft government guides that are not yet verified (clearly labelled). Never enable in production.') on conflict (key) do nothing;
+insert into public.feature_flags (key, enabled, description) values ('account_sign_in', false, 'E-mail/Google sign-in screens. Off: every installation gets a private no-sign-in account (no e-mail or SMTP needed).') on conflict (key) do nothing;
 insert into public.feature_flags (key, enabled, description) values ('savings_goals', false, 'Savings goals (Phase 4).') on conflict (key) do nothing;
 insert into public.feature_flags (key, enabled, description) values ('life_milestones', false, 'Life milestone templates (Phase 4).') on conflict (key) do nothing;
 insert into public.feature_flags (key, enabled, description) values ('household', false, 'Household management (Phase 4).') on conflict (key) do nothing;

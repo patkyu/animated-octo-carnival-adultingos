@@ -12,7 +12,7 @@ Data Protection Officer: [name], [dpo e-mail address]. You may also contact the 
 
 ## What we collect
 
-Account data (only if you create an account): your e-mail address and a password managed by our authentication provider, or your Google account e-mail if you use Google Sign-In.
+Account data: AdultingOS does not ask for your e-mail, phone number or a password. When you start using the app online, it creates a private account identified only by a random ID, linked to this installation by a sign-in token stored in Android's secure keystore. We also receive the IP address of each request, as any internet service does.
 
 Information you enter: tasks, bills and payment records you type in, subscriptions, document metadata (type, issuer, issue and expiry dates, and at most the last 4 characters of a reference number), notes, checklists and categories. We do not ask for or store full government ID numbers, photos or scans of IDs, bank credentials, or card numbers.
 
@@ -24,9 +24,9 @@ Reports and feedback you choose to send.
 
 Technical data: app version, platform and error codes needed to operate sync and the AI service. We do not use advertising identifiers and the app has no ads.
 
-## Guest use
+## Before your account connects
 
-You can use AdultingOS without an account. Your information then stays only on your phone and is not sent to us, except guide content your phone downloads.
+Until the app is online and your private account is set up, your information stays only on your phone and is not sent to us, except requests for guide content. If this version of the app has no server configured, everything stays on your phone.
 
 ## How we use it
 
@@ -48,8 +48,6 @@ We process your information to provide the service you request (contract), with 
 
 Service providers acting on our instructions: Supabase (database, authentication and server functions; hosting region Tokyo, Japan (ap-northeast-1)), and our AI provider, Anthropic, which processes Ask Adu messages to generate answers. [Add the actual crash-reporting or analytics provider here if one is enabled; none is included in this version.]
 
-Google, if you choose Google Sign-In.
-
 Authorities, only when required by law.
 
 Notifications are generated on your phone; reminder content is not sent to a push service.
@@ -62,7 +60,7 @@ No system is perfectly secure. We will notify affected users and the National Pr
 
 ## Retention
 
-Your records are kept while your account exists. Deleted records are removed from sync within 90 days. AI conversations idle for 12 months are deleted automatically, and you can delete them any time. Audit logs (which contain no content) are kept for 24 months.
+Your records are kept while your account exists. Because there is no sign-in, an account cannot be recovered once the app is uninstalled or its data is cleared; accounts with no activity for 12 months are deleted automatically with all their data. Deleted records are removed from sync within 90 days. AI conversations idle for 12 months are deleted automatically, and you can delete them any time. Audit logs (which contain no content) are kept for 24 months.
 
 When you delete your account, your personal data is deleted immediately from our database; backups are overwritten within [30] days. We keep a record that a deletion happened (without your identity) and the text of feedback or reports you sent, with your identity removed.
 
@@ -70,7 +68,7 @@ When you delete your account, your personal data is deleted immediately from our
 
 Under the Data Privacy Act you may be informed, access, correct, object, have your data erased or blocked, receive a copy (data portability), and file a complaint with the National Privacy Commission.
 
-In the app: edit your profile and records at any time; Settings → Export my data (JSON and CSV); Settings → Privacy to withdraw AI consent or delete AI history; Settings → Delete account. Without the app, use [https://adultingos.app/delete-account] or e-mail [dpo e-mail address].
+In the app: edit your profile and records at any time; Settings → Export my data (JSON and CSV); Settings → Privacy to withdraw AI consent or delete AI history; Settings → Delete account. If you no longer have the app, your account can no longer be used by anyone and is deleted automatically after 12 months of inactivity; you can also contact us at [dpo e-mail address] through [https://adultingos.app/delete-account].
 
 ## Children
 

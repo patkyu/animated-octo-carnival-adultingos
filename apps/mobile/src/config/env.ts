@@ -30,8 +30,10 @@ export const APP_ENV: AppEnv = webDemoParam() ? 'demo' : ((extra.appEnv as AppEn
 export const IS_PRODUCTION = APP_ENV === 'production';
 export const IS_DEMO = APP_ENV === 'demo';
 
-export const SUPABASE_URL = extra.supabaseUrl ?? '';
-export const SUPABASE_ANON_KEY = extra.supabaseAnonKey ?? '';
+// app.config extras are embedded in native builds; web exports rely on the
+// EXPO_PUBLIC_* values Expo inlines at build time.
+export const SUPABASE_URL = extra.supabaseUrl || process.env.EXPO_PUBLIC_SUPABASE_URL || '';
+export const SUPABASE_ANON_KEY = extra.supabaseAnonKey || process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY || '';
 /** False in builds without backend credentials: the app runs fully local and says so. */
 export const BACKEND_CONFIGURED = !!SUPABASE_URL && !!SUPABASE_ANON_KEY && !IS_DEMO;
 export const GOOGLE_WEB_CLIENT_ID = extra.googleWebClientId ?? '';

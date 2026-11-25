@@ -20,6 +20,11 @@ export const FEATURE_FLAGS = {
     production: false,
     development: true,
   },
+  account_sign_in: {
+    description: 'E-mail/Google sign-in screens. Off: every installation gets a private no-sign-in account (no e-mail or SMTP needed).',
+    production: false,
+    development: false,
+  },
   savings_goals: { description: 'Savings goals (Phase 4).', production: false, development: false },
   life_milestones: { description: 'Life milestone templates (Phase 4).', production: false, development: false },
   household: { description: 'Household management (Phase 4).', production: false, development: false },

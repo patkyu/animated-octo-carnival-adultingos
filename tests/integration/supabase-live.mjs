@@ -2,16 +2,15 @@
  * Live integration test against a real Supabase project, through the public
  * API with the publishable/anon key — the same path the app uses.
  *
- *   SUPABASE_URL=… SUPABASE_ANON_KEY=… \
- *   QA_A_EMAIL=… QA_A_PASSWORD=… QA_B_EMAIL=… QA_B_PASSWORD=… \
- *   node tests/integration/supabase-live.mjs
+ *   SUPABASE_URL=… SUPABASE_ANON_KEY=… node tests/integration/supabase-live.mjs
  *
- * Requires two confirmed test users. Cleans up the rows it creates.
+ * Uses two no-sign-in (anonymous) accounts, exactly like the app, and deletes
+ * them at the end through the delete-account function.
  */
 import { createClient } from '@supabase/supabase-js';
 import { randomUUID } from 'node:crypto';
 
-const { SUPABASE_URL, SUPABASE_ANON_KEY, QA_A_EMAIL, QA_A_PASSWORD, QA_B_EMAIL, QA_B_PASSWORD } = process.env;
+const { SUPABASE_URL, SUPABASE_ANON_KEY } = process.env;
 const results = [];
 const check = (name, cond, detail = '') => {
   results.push({ name, ok: !!cond });
@@ -31,15 +30,17 @@ check('anon: knowledge search over published guides', !ks.error && ks.data.lengt
 const anonObl = await anon.from('obligations').select('id').limit(1);
 check('anon: personal tables blocked', !!anonObl.error || anonObl.data.length === 0, anonObl.error?.code ?? 'empty');
 const flags = await anon.from('feature_flags').select('key, enabled');
-check('anon: feature flags readable', !flags.error && flags.data.length === 10);
+check('anon: feature flags readable', !flags.error && flags.data.length >= 10 && flags.data.some((f) => f.key === 'account_sign_in' && !f.enabled), `${flags.data?.length} flags`);
 
-// ---- sign in ----
+// ---- no-sign-in accounts ----
+const emailSignUp = await client().auth.signUp({ email: `qa-${randomUUID().slice(0, 8)}@example.com`, password: 'Qa-test-12345' });
+check('auth: e-mail sign-up is off (no SMTP needed)', !!emailSignUp.error, emailSignUp.error?.code ?? emailSignUp.error?.message);
 const a = client();
 const b = client();
-const sa = await a.auth.signInWithPassword({ email: QA_A_EMAIL, password: QA_A_PASSWORD });
-const sb = await b.auth.signInWithPassword({ email: QA_B_EMAIL, password: QA_B_PASSWORD });
-check('auth: user A signs in', !sa.error, sa.error?.message);
-check('auth: user B signs in', !sb.error, sb.error?.message);
+const sa = await a.auth.signInAnonymously();
+const sb = await b.auth.signInAnonymously();
+check('auth: user A gets a no-sign-in account', !sa.error && sa.data.user?.is_anonymous === true && !sa.data.user.email, sa.error?.message);
+check('auth: user B gets a separate account', !sb.error && sb.data.user?.id !== sa.data.user?.id, sb.error?.message);
 const uidA = sa.data.user.id;
 
 const prof = await a.from('profiles').select('id, timezone').single();
@@ -94,6 +95,12 @@ await a.from('obligations').delete().eq('id', ob);
 await a.from('consent_records').delete().eq('user_id', uidA); // append-only: expected to be refused
 const left = await a.from('obligations').select('id').eq('id', ob);
 check('cleanup: test obligation deleted (cascade)', left.data?.length === 0);
+
+// ---- delete both test accounts (as the app's Delete account does) ----
+for (const [name, c] of [['A', a], ['B', b]]) {
+  const d = await c.functions.invoke('delete-account', { body: { confirm: 'DELETE', source: 'in_app' } });
+  check(`cleanup: account ${name} deleted`, !d.error && d.data?.deleted === true, d.error?.message);
+}
 
 const failed = results.filter((r) => !r.ok).length;
 console.log(`\n${results.length - failed}/${results.length} live checks passed`);

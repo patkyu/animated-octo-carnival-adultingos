@@ -2,6 +2,7 @@ import * as Linking from 'expo-linking';
 import * as WebBrowser from 'expo-web-browser';
 import type { Session } from '@supabase/supabase-js';
 import { create } from 'zustand';
+import { IS_DEMO } from '@/config/env';
 import { wipeAllUserData } from '@/db/database';
 import { getAppState, updateAppState } from '@/db/settings';
 import { enqueueEverything, resetCursors, syncNow } from './engine';
@@ -55,6 +56,44 @@ export async function initAuth(): Promise<void> {
     useAuthStore.getState().set({ session });
     if (session) void syncNow();
   });
+}
+
+/** True for the no-sign-in account this installation created (no e-mail, no password). */
+export function isAnonymousSession(session: Session | null | undefined): boolean {
+  return !!session && (session.user.is_anonymous === true || !session.user.email);
+}
+
+let pending: Promise<boolean> | null = null;
+
+/**
+ * No-sign-in accounts: once the person has started using the app, this
+ * creates a private anonymous Supabase account for the installation (no
+ * e-mail, password or SMTP needed) and moves the on-device data into it.
+ * Safe to call often: it does nothing when a session exists, the app is
+ * offline (it retries next time), or the device holds another account's data.
+ */
+export function ensureAnonymousSession(): Promise<boolean> {
+  if (pending) return pending;
+  pending = (async () => {
+    try {
+      const sb = supabase();
+      if (!sb || IS_DEMO) return false;
+      if (useAuthStore.getState().session) return true;
+      const app = await getAppState();
+      // Not started yet, or data belongs to an account whose session was lost.
+      if (!app.mode || app.ownerUserId) return false;
+      const { data, error } = await sb.auth.signInAnonymously();
+      if (error || !data.session) return false;
+      useAuthStore.getState().set({ session: data.session });
+      const res = await adoptSession(data.session.user.id);
+      return res !== 'conflict';
+    } catch {
+      return false;
+    } finally {
+      pending = null;
+    }
+  })();
+  return pending;
 }
 
 export async function signUpWithEmail(email: string, password: string): Promise<{ needsVerification: boolean }> {

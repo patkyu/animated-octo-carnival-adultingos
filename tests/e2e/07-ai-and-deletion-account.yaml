@@ -1,14 +1,10 @@
 appId: com.adultingos.app.dev
-# Requires a configured backend (EXPO_PUBLIC_SUPABASE_*) and AI gateway, and TEST_EMAIL/TEST_PASSWORD.
+# Requires a configured backend (EXPO_PUBLIC_SUPABASE_*) and AI gateway. Run after
+# 01-onboarding-guest: the app creates its private no-sign-in account by itself.
 ---
 - launchApp
 - tapOn: "Profile"
-- tapOn: "Create account or sign in"
-- tapOn: "E-mail"
-- inputText: ${TEST_EMAIL}
-- tapOn: "Password"
-- inputText: ${TEST_PASSWORD}
-- tapOn: "Sign in"
+- assertVisible: "Private account on this phone"
 - tapOn: "Ask Adu"
 - tapOn: "Review and continue"
 - tapOn: "I understand — continue"

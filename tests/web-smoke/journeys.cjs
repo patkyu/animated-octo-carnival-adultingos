@@ -37,7 +37,7 @@ function ok(name) {
     // 1. Onboarding
     await page.goto(BASE, { waitUntil: 'networkidle' });
     await btn('Skip').click();
-    await btn('Continue on this device').click();
+    await btn('Get started').click();
     await field('What should we call you?').fill('Sam');
     await btn('Continue').click();
     await text('Pick your companion').waitFor();

@@ -7,10 +7,10 @@ Everything the code can do without your accounts, keys or decisions is done and 
 |---|---|---|---|
 | 1 | ✅ **Development Supabase project** — done (`vmjinibzebnzaplbqjgb`, Tokyo): schema, seed, functions, auth settings deployed and tested. Still needed: a separate **production** project (choose Singapore) before launch | Accounts, sync, Ask Adu | — |
 | 2 | ✅ **Anthropic API key** — done (Supabase secret), verified with live answers | Ask Adu | — |
-| 3a | **Custom SMTP for e-mail** (Resend, Postmark or SES on your domain) → Supabase Auth → Emails → SMTP | Without it real users get **no verification or password-reset e-mails** (built-in sender only reaches your team, a few per hour) | Supabase dashboard |
-| 3 | **Google OAuth web client** (Google Cloud console) | "Continue with Google" | Client ID + secret into Supabase Auth → Providers → Google |
+| 3 | ✅ **No e-mail/SMTP needed** — the app now uses no-sign-in (anonymous) accounts; enabled on the dev project. For the production project: turn on *Allow anonymous sign-ins* and turn off the Email provider (`docs/deployment/backend.md` §3) | — | Supabase dashboard |
+| 3a | *(Optional, later)* SMTP + Google OAuth only if you want e-mail/Google sign-in for account recovery (flag `account_sign_in`) | Lets people recover their account on a new phone | Supabase dashboard |
 | 4 | **Support e-mail address** | In-app contact, store listing, privacy policy | `EXPO_PUBLIC_SUPPORT_EMAIL` |
-| 5 | **Domain** (e.g. adultingos.app) + static hosting | Play requires a public privacy policy URL and an account-deletion URL | Host `apps/web-public/dist` |
+| 5 | **Domain** (e.g. adultingos.site, which you have in GoDaddy) + static hosting | Play requires a public privacy policy URL and an account-deletion URL | Host `apps/web-public/dist` |
 
 ## 2. Google Play
 | # | Item | Why |
@@ -46,4 +46,3 @@ Everything the code can do without your accounts, keys or decisions is done and 
 
 ## Optional: let me do more here
 - Allow the `.gov.ph` domains in this environment's network settings and I can pre-check official pages and prepare reviewer notes (a human must still verify and publish).
-- Share the Supabase URL + anon key and I can run the full sync/auth/Ask Adu flows against staging.

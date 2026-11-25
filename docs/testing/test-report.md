@@ -14,12 +14,12 @@ Run on 2026-11-25 in the build container (Linux, Node 22, PostgreSQL 16, Deno 2.
 | Database: last-writer-wins, server_seq, immutable owner, exactly-one next occurrence, one payment per occurrence, cascades | `20_sync_and_idempotency.sql` | ✅ |
 | Database: AI proposal exactly-once confirmation, cross-user refusal, users can't forge AI messages, history deletion | `30_ai_proposals.sql` | ✅ |
 | Database: editorial workflow (editor can't approve/publish, publish requires verified official source, versioning, retrieval index, audit) | `40_guide_workflow.sql` | ✅ |
-| Database: export scope, full account deletion cascade, anonymised remnants, retention job | `50_privacy_lifecycle.sql` | ✅ |
+| Database: export scope, full account deletion cascade, anonymised remnants, retention job (incl. expiry of inactive no-sign-in accounts) | `50_privacy_lifecycle.sql` | ✅ |
 | Edge Functions type check (strict, against real Anthropic/Supabase SDK types) | `deno check …` | ✅ |
 | AI gateway logic (redaction, prompt-injection neutralisation, citation enforcement, uncertainty note, phishing filter, record-access intent) | `deno test ask-adu/adu_test.ts` | ✅ 6/6 |
-| App route crawl — 44 screens in the real app (web renderer, demo data), fails on any page error or React error screen; deleted-item fallback | `node tests/web-smoke/crawl.cjs` | ✅ 44 routes, 0 errors |
+| App route crawl — 45 screens in the real app (web renderer, demo data), fails on any page error or React error screen; deleted-item fallback | `node tests/web-smoke/crawl.cjs` | ✅ 45 routes, 0 errors |
 | User journeys in the real UI (fresh profile): onboarding as guest; add monthly bill → pay → **exactly one** next occurrence (Dec 25); paid occurrence listed once; guide → 5 tasks; task create/complete/reopen/delete with confirmation; expired document flagged; auto-renewing subscription rolls forward | `node tests/web-smoke/journeys.cjs` | ✅ 9/9 |
-| Lint (ESLint, expo config) | `npm run lint -w @adultingos/mobile` | ✅ 0 errors (6 intentional warnings) |
+| Lint (ESLint, expo config) | `npm run lint -w @adultingos/mobile` | ✅ 0 errors (7 intentional warnings) |
 | Admin portal production build | `next build` | ✅ |
 | Dependency audit (production deps) | `npm audit --omit=dev --audit-level=high` | ✅ no high/critical (3 moderate in `minimatch`, used only by Expo's build-time fingerprint tool; fix requires a breaking forced downgrade) |
 | Android release build (APK + AAB) | `./gradlew assembleRelease bundleRelease` | ✅ BUILD SUCCESSFUL |
@@ -36,6 +36,18 @@ Deployed with the Supabase Management API: 10 migrations, reference seed, `ask-a
 Bugs found only by testing against real Supabase (both fixed, with local regression tests):
 - **Data export always failed** for signed-in users: `export_my_data()` was `STABLE` but writes an audit row; PostgREST runs stable functions read-only. → `VOLATILE` (migration `…0200`) + a test that flags any non-volatile function that writes.
 - **Ask Adu missed relevant guides** for natural questions: full-text search required every word to match. → match any meaningful term, ranked (migration `…0300`); the moving-out question is now answered from the guide with a citation.
+
+## No-sign-in accounts (2026-11-27)
+No e-mail, password or SMTP: each installation gets a private Supabase **anonymous** account automatically. Server: anonymous sign-ins ON, e-mail provider OFF, manual linking ON; inactive anonymous accounts deleted after 12 months (migration `…20261127000100`). Every test account was deleted at the end; the project was left with 0 users.
+
+| Suite | Command | Result |
+|---|---|---|
+| Database & sync over the real API with two no-sign-in accounts (e-mail sign-up refused, separate accounts, profile trigger, sync, exactly-once, LWW, isolation, export, consent, deletion of both) | `node tests/integration/supabase-live.mjs` | ✅ 25/25 |
+| Ask Adu + deletion with no-sign-in accounts (grounded answer with citation, unverifiable government question, redaction, exactly-once proposal, report, history deletion, typed-confirmation deletion, deleted token and refresh rejected) | `node tests/integration/ask-adu-live.mjs` | ✅ 19/19 |
+| Real app UI against the live backend: Get started has no e-mail/password; onboarding has no account step; private account created and synced automatically; no "Sign out"; Ask Adu reachable (consent first); account deleted | `node tests/web-smoke/anonymous-account.cjs` | ✅ 6/6 |
+| Local-only build (no backend): crawl + 9 journeys with the new Get started screen | `crawl.cjs`, `journeys.cjs` | ✅ |
+
+Found while testing: web exports didn't receive the backend settings (Expo embeds `app.config` extras only in native builds) → `EXPO_PUBLIC_*` fallback in `src/config/env.ts`. Browser pages can't call the Edge Functions unless their origin is in `ALLOWED_WEB_ORIGINS` (by design; the Android app sends no origin).
 
 ## Second audit (2026-11-26) — defects found and fixed
 | # | Defect | Impact | Fix | Verified by |

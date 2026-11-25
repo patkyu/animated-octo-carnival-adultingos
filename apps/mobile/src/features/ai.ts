@@ -21,7 +21,7 @@ async function client() {
   const sb = supabase();
   if (!sb) throw new AiError('not_configured', 'Ask Adu needs the AdultingOS cloud service, which is not set up in this build.');
   const { data } = await sb.auth.getSession();
-  if (!data.session) throw new AiError('signed_out', 'Sign in to use Ask Adu. Your questions are answered on our servers.');
+  if (!data.session) throw new AiError('signed_out', 'Ask Adu needs your private account to connect. Check your internet connection and try again.');
   const net = await NetInfo.fetch();
   if (net.isConnected === false) throw new AiError('offline', "You're offline. Ask Adu needs a connection — your tasks and saved guides still work.");
   return sb;

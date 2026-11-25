@@ -18,7 +18,7 @@ const ROUTES = [
   '/guide/first-job-requirements', '/guide/checklist/first-job-requirements', '/guide/nbi-clearance', '/guide/report/nbi-clearance',
   '/achievements', '/mascots', '/settings/profile', '/settings/appearance', '/settings/notifications', '/settings/privacy',
   '/settings/export', '/settings/delete-account', '/settings/help', '/settings/feedback', '/settings/legal?doc=privacy',
-  '/settings/legal?doc=terms', '/settings/about', '/settings/categories', '/welcome', '/auth/sign-in', '/auth/register',
+  '/settings/legal?doc=terms', '/settings/about', '/settings/categories', '/welcome', '/auth/sign-in', '/auth/account', '/auth/register',
   '/auth/forgot', '/onboarding/personalize', '/onboarding/companion', '/onboarding/reminders', '/onboarding/first-step',
   '/task/does-not-exist', '/assistant/history',
 ];

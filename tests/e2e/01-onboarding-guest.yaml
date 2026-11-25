@@ -3,7 +3,7 @@ appId: com.adultingos.app.dev
 - clearState
 - launchApp
 - tapOn: "Skip"
-- tapOn: "Use without an account"
+- tapOn: "Get started"
 - tapOn:
     id: "What should we call you?"
     optional: true

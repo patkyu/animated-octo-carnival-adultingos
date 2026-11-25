@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { MASCOTS } from '@adultingos/brand';
 import { APP_VERSION, BACKEND_CONFIGURED, IS_DEMO, isEnabled } from '@/config/env';
 import { useAppStore } from '@/state/appStore';
-import { signOut, useAuthStore } from '@/sync/auth';
+import { ensureAnonymousSession, isAnonymousSession, signOut, useAuthStore } from '@/sync/auth';
 import { syncNow, useSyncStore } from '@/sync/engine';
 import { AppText, Button, Card, Divider, Icon, Row, Stack, type IconName } from '@/ui/primitives';
 import { Screen } from '@/ui/layout';
@@ -33,10 +33,11 @@ export default function Profile() {
   const session = useAuthStore((s) => s.session);
   const sync = useSyncStore();
   const [confirmOut, setConfirmOut] = useState(false);
+  const anonymous = isAnonymousSession(session);
   const m = MASCOTS[profile.favoriteMascot];
   const syncText =
     sync.status === 'syncing' ? 'Syncing…' : sync.status === 'offline' ? 'Offline — will sync later' : sync.status === 'error' ? 'Sync paused — will retry' :
-    sync.pending ? `${sync.pending} change${sync.pending === 1 ? '' : 's'} waiting to sync` : app.lastSyncAt ? `Backed up ${app.lastSyncAt.slice(0, 16).replace('T', ' ')}` : 'Backed up';
+    sync.pending ? `${sync.pending} change${sync.pending === 1 ? '' : 's'} waiting to sync` : app.lastSyncAt ? `Synced ${app.lastSyncAt.slice(0, 16).replace('T', ' ')}` : 'Synced';
 
   return (
     <Screen title="Profile" back={false} largeTitle>
@@ -45,7 +46,7 @@ export default function Profile() {
           <Mascot id={profile.avatar} expression="happy" size={72} force />
           <Stack gap={2} style={{ flex: 1 }}>
             <AppText variant="section" color="onCategory">{profile.preferredName || 'Hello there'}</AppText>
-            <AppText variant="support" color="onCategory">{session?.user.email ?? (IS_DEMO ? 'Demo mode · sample data' : 'Using AdultingOS on this device')}</AppText>
+            <AppText variant="support" color="onCategory">{session ? (anonymous ? 'Private account on this phone' : session.user.email) : IS_DEMO ? 'Demo mode · sample data' : 'Using AdultingOS on this device'}</AppText>
             <AppText variant="caption" color="onCategory">Companion: {m.name} — “{m.phrase}”</AppText>
           </Stack>
         </Row>
@@ -53,18 +54,25 @@ export default function Profile() {
 
       {session ? (
         <Card>
+          <Stack gap={10}>
           <Row gap={12}>
             <Icon name={sync.status === 'error' || sync.status === 'offline' ? 'cloud-off' : 'cloud'} color={sync.status === 'error' ? 'warning' : 'success'} />
             <AppText style={{ flex: 1 }} accessibilityLiveRegion="polite">{syncText}</AppText>
             <Button label="Sync now" compact variant="ghost" onPress={() => void syncNow()} />
           </Row>
+          {anonymous ? (
+            <AppText variant="caption" color="textMuted">
+              No sign-in: this account lives only in this app. If you uninstall it, clear its data or change phones, it can't be recovered — export your data now and then.
+            </AppText>
+          ) : null}
+          </Stack>
         </Card>
-      ) : BACKEND_CONFIGURED && !IS_DEMO ? (
+      ) : BACKEND_CONFIGURED && !IS_DEMO && app.mode ? (
         <Card>
           <Stack gap={8}>
-            <AppText variant="bodyStrong">Back up your plans</AppText>
-            <AppText variant="support" color="textMuted">Your data is only on this phone. Create an account to back it up and use Ask Adu — your current items move over without duplicates.</AppText>
-            <Button label="Create account or sign in" compact onPress={() => router.push('/auth/sign-in')} />
+            <AppText variant="bodyStrong">Not connected yet</AppText>
+            <AppText variant="support" color="textMuted">Your items are saved on this phone. When you're online, AdultingOS sets up your private account automatically so they sync and Ask Adu works.</AppText>
+            <Button label="Connect now" compact onPress={async () => { if (!(await ensureAnonymousSession())) toast('Still offline — we\'ll try again later.'); }} />
           </Stack>
         </Card>
       ) : null}
@@ -97,7 +105,7 @@ export default function Profile() {
           <Item icon="info" label="About AdultingOS" to="/settings/about" detail={`v${APP_VERSION}`} />
         </Stack>
       </Card>
-      {session ? <Button label="Sign out" icon="log-out" variant="secondary" full onPress={() => setConfirmOut(true)} /> : null}
+      {session && !anonymous ? <Button label="Sign out" icon="log-out" variant="secondary" full onPress={() => setConfirmOut(true)} /> : null}
       <Divider />
       <AppText variant="caption" color="textMuted" align="center">AdultingOS is an independent app, not affiliated with any government agency.</AppText>
 

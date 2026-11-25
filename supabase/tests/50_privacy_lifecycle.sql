@@ -42,8 +42,24 @@ do $$ begin
   assert (select count(*) from public.obligations where user_id = 'bbbbbbbb-0000-4000-8000-000000000002') = 1, 'other users untouched';
 end $$;
 
--- Retention job runs cleanly.
+-- Retention: inactive anonymous (no-sign-in) accounts are deleted after 12
+-- months; active ones, recently refreshed ones and e-mail accounts are kept.
+insert into auth.users (id, email, is_anonymous, last_sign_in_at, created_at) values
+  ('cccccccc-0000-4000-8000-000000000001', null, true, now() - interval '13 months', now() - interval '13 months'),
+  ('cccccccc-0000-4000-8000-000000000002', null, true, now() - interval '13 months', now() - interval '13 months'),
+  ('cccccccc-0000-4000-8000-000000000003', null, true, now() - interval '1 day', now() - interval '1 day'),
+  ('cccccccc-0000-4000-8000-000000000004', 'old@example.com', false, now() - interval '20 months', now() - interval '20 months');
+insert into auth.sessions (user_id, created_at, refreshed_at) values
+  ('cccccccc-0000-4000-8000-000000000002', now() - interval '13 months', now() - interval '2 days');
 select public.run_retention();
+do $$ begin
+  assert not exists (select 1 from auth.users where id = 'cccccccc-0000-4000-8000-000000000001'), 'inactive anonymous account deleted';
+  assert (select count(*) from public.profiles where id = 'cccccccc-0000-4000-8000-000000000001') = 0, 'its profile cascaded';
+  assert exists (select 1 from auth.users where id = 'cccccccc-0000-4000-8000-000000000002'), 'recently refreshed anonymous account kept';
+  assert exists (select 1 from auth.users where id = 'cccccccc-0000-4000-8000-000000000003'), 'active anonymous account kept';
+  assert exists (select 1 from auth.users where id = 'cccccccc-0000-4000-8000-000000000004'), 'e-mail account kept';
+  assert exists (select 1 from public.audit_events where action = 'account.expired_anonymous' and (metadata->>'count')::int = 1), 'expiry audited without identity';
+end $$;
 rollback;
 
 -- Regression: functions exposed over the API that write data must be VOLATILE

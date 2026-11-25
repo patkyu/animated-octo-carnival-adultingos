@@ -21,7 +21,7 @@ import { debounce, onDataChanged } from '@/lib/events';
 import { invalidateAll, queryClient } from '@/lib/useData';
 import { reconcileReminders, setupNotificationChannels, snoozeFromNotification } from '@/notifications/scheduler';
 import { useAppStore } from '@/state/appStore';
-import { initAuth } from '@/sync/auth';
+import { ensureAnonymousSession, initAuth } from '@/sync/auth';
 import { syncNow } from '@/sync/engine';
 import { ThemeProvider, useTheme } from '@/theme/ThemeProvider';
 import { ToastHost, toast } from '@/ui/overlays';
@@ -75,6 +75,7 @@ export default function RootLayout() {
         await runMaintenance(); // time zone follow + subscription renewals
         await reload();
         await initAuth();
+        void ensureAnonymousSession(); // no-sign-in account; retries on foreground
         if (Platform.OS !== 'web') await setupNotificationChannels();
         void reconcileReminders();
         void syncNow();
@@ -96,6 +97,7 @@ export default function RootLayout() {
     const sub = AppState.addEventListener('change', (s) => {
       if (s === 'active') {
         void runMaintenance();
+        void ensureAnonymousSession();
         void syncNow();
         void reconcileReminders();
         void invalidateAll();

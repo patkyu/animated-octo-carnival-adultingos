@@ -6,7 +6,7 @@ import { AI_DISCLAIMER, GOVERNMENT_DISCLAIMER, uuidv4 } from '@adultingos/shared
 import { BACKEND_CONFIGURED } from '@/config/env';
 import { AiError, askAdu, hasAiConsent } from '@/features/ai';
 import { useChat, type ChatMessage } from '@/features/chatStore';
-import { useAuthStore } from '@/sync/auth';
+import { ensureAnonymousSession, useAuthStore } from '@/sync/auth';
 import { useTheme } from '@/theme/ThemeProvider';
 import { AppText, Button, Card, Chip, Icon, IconButton, Row, Stack, StatusBadge } from '@/ui/primitives';
 import { Mascot } from '@/ui/Mascot';
@@ -91,7 +91,15 @@ export default function Assistant() {
   const { messages, conversationId, draft, set, reset } = useChat();
   const [busy, setBusy] = useState(false);
   const [consent, setConsent] = useState<boolean | null>(null);
+  const [connecting, setConnecting] = useState(false);
   const scroll = useRef<React.ComponentRef<typeof ScrollView>>(null);
+
+  // No sign-in: connect this installation's private account when needed.
+  useEffect(() => {
+    if (!BACKEND_CONFIGURED || session || !online) return;
+    setConnecting(true);
+    void ensureAnonymousSession().finally(() => setConnecting(false));
+  }, [session, online]);
 
   useEffect(() => {
     if (session) void hasAiConsent().then(setConsent).catch(() => setConsent(false));
@@ -126,8 +134,12 @@ export default function Assistant() {
     return (
       <Gate>
           <AppText align="center">Adu can explain procedures, build checklists from verified guides and summarize what's coming up.</AppText>
-          <Notice icon="shield">Ask Adu needs an account because answers are generated on our servers.</Notice>
-          <Button label="Sign in or create an account" full onPress={() => router.push('/auth/sign-in')} />
+          {!online ? (
+            <Notice icon="alert-triangle" tone="warning">Ask Adu needs an internet connection because answers are generated on our servers.</Notice>
+          ) : (
+            <Notice icon="info">{connecting ? 'Connecting your private account…' : "We couldn't connect right now. Your items are safe on this phone."}</Notice>
+          )}
+          <Button label="Try again" full loading={connecting} disabled={!online} onPress={() => { setConnecting(true); void ensureAnonymousSession().finally(() => setConnecting(false)); }} />
       </Gate>
     );
   }

@@ -8,7 +8,7 @@ import { useChat } from '@/features/chatStore';
 import { cancelAllReminders } from '@/notifications/scheduler';
 import { useAppStore } from '@/state/appStore';
 import { supabase } from '@/sync/supabase';
-import { useAuthStore } from '@/sync/auth';
+import { isAnonymousSession, useAuthStore } from '@/sync/auth';
 import { AppText, Button, Card, Stack } from '@/ui/primitives';
 import { ToggleRow } from '@/ui/forms';
 import { Screen } from '@/ui/layout';
@@ -21,7 +21,7 @@ export default function Privacy() {
   return (
     <Screen title="Privacy and security">
       <AppText color="textMuted">AdultingOS collects only what it needs to organize your responsibilities. We never sell your data or show ads.</AppText>
-      {session ? (
+      {session && !isAnonymousSession(session) ? (
         <Card>
           <Stack gap={8}>
             <AppText variant="section">Account</AppText>

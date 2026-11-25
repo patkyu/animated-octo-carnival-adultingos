@@ -33,7 +33,7 @@ export default function Verify() {
             }
           }}
         />
-        <Button label="Back to sign in" variant="ghost" onPress={() => router.replace('/auth/sign-in')} />
+        <Button label="Back to sign in" variant="ghost" onPress={() => router.replace('/auth/account')} />
       </Stack>
     </Screen>
   );

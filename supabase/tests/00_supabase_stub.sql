@@ -18,7 +18,16 @@ alter default privileges in schema public grant usage, select on sequences to an
 create table if not exists auth.users (
   id uuid primary key,
   email text unique,
+  is_anonymous boolean not null default false,
+  last_sign_in_at timestamptz,
   created_at timestamptz not null default now()
+);
+create table if not exists auth.sessions (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users (id) on delete cascade,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz,
+  refreshed_at timestamp
 );
 
 -- Same contract as Supabase: the JWT subject, read from request settings.

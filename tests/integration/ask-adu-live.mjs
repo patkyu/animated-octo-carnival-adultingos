@@ -1,11 +1,12 @@
 /**
  * Live end-to-end test of the deployed ask-adu and delete-account Edge
  * Functions (real model call — costs a few cents). Same env vars as
- * supabase-live.mjs. User B is DELETED by this test.
+ * supabase-live.mjs. Uses no-sign-in (anonymous) accounts like the app and
+ * deletes both at the end.
  */
 import { createClient } from '@supabase/supabase-js';
 
-const { SUPABASE_URL, SUPABASE_ANON_KEY, QA_A_EMAIL, QA_A_PASSWORD, QA_B_EMAIL, QA_B_PASSWORD } = process.env;
+const { SUPABASE_URL, SUPABASE_ANON_KEY } = process.env;
 const results = [];
 const check = (name, cond, detail = '') => {
   results.push(!!cond);
@@ -21,8 +22,8 @@ const ask = async (sb, message, conversationId = null) => {
 };
 
 const a = client();
-const { data: sa, error: ea } = await a.auth.signInWithPassword({ email: QA_A_EMAIL, password: QA_A_PASSWORD });
-check('user A signed in', !ea, ea?.message);
+const { data: sa, error: ea } = await a.auth.signInAnonymously();
+check('user A has a no-sign-in account', !ea && sa.user?.is_anonymous === true, ea?.message);
 const uidA = sa.user.id;
 
 // Consent gate (fresh consent row; history is append-only).
@@ -78,15 +79,20 @@ check('AI history deleted', !del.error && left.data.length === 0, `${del.data} c
 
 // 7. Account deletion via the Edge Function (user B)
 const b = client();
-const { data: sb, error: eb } = await b.auth.signInWithPassword({ email: QA_B_EMAIL, password: QA_B_PASSWORD });
-check('user B signed in', !eb, eb?.message);
+const { data: sb, error: eb } = await b.auth.signInAnonymously();
+check('user B has a no-sign-in account', !eb, eb?.message);
 const noConfirm = await b.functions.invoke('delete-account', { body: {} });
 check('deletion requires typed confirmation', !!noConfirm.error);
 const d = await b.functions.invoke('delete-account', { body: { confirm: 'DELETE', source: 'in_app' } });
 check('delete-account succeeded', !d.error && d.data?.deleted === true, d.error?.message);
-const again = await client().auth.signInWithPassword({ email: QA_B_EMAIL, password: QA_B_PASSWORD });
-check('deleted user can no longer sign in', !!again.error, again.error?.message);
-void sb;
+const again = await client().auth.getUser(sb.session.access_token);
+check("deleted account's token no longer works", !!again.error, again.error?.message);
+const refresh = await client().auth.refreshSession({ refresh_token: sb.session.refresh_token });
+check("deleted account can't be refreshed", !!refresh.error, refresh.error?.message);
+
+// Clean up user A the same way.
+const dA = await a.functions.invoke('delete-account', { body: { confirm: 'DELETE', source: 'in_app' } });
+check('cleanup: user A deleted', !dA.error && dA.data?.deleted === true, dA.error?.message);
 
 const failed = results.filter((x) => !x).length;
 console.log(`\n${results.length - failed}/${results.length} live AI/deletion checks passed`);

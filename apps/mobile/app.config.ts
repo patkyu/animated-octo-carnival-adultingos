@@ -106,10 +106,10 @@ const config: ExpoConfig = {
     supabaseUrl: process.env.EXPO_PUBLIC_SUPABASE_URL ?? '',
     supabaseAnonKey: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? '',
     googleWebClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID ?? '',
-    supportEmail: process.env.EXPO_PUBLIC_SUPPORT_EMAIL ?? 'support@adultingos.app',
-    privacyPolicyUrl: 'https://adultingos.app/privacy',
-    termsUrl: 'https://adultingos.app/terms',
-    accountDeletionUrl: 'https://adultingos.app/delete-account',
+    supportEmail: process.env.EXPO_PUBLIC_SUPPORT_EMAIL || 'work.patkyu@gmail.com',
+    privacyPolicyUrl: 'https://patkyu.github.io/animated-octo-carnival-adultingos/privacy/',
+    termsUrl: 'https://patkyu.github.io/animated-octo-carnival-adultingos/terms/',
+    accountDeletionUrl: 'https://patkyu.github.io/animated-octo-carnival-adultingos/delete-account/',
   },
 };
 

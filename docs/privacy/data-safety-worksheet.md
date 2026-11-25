@@ -8,7 +8,7 @@ Prepared from the **current code**. Re-check before every release; if you add an
 |---|---|---|
 | Does the app collect or share any required user data types? | **Yes** — user-entered records sync to a private no-sign-in account once the app is online | `ensureAnonymousSession()` in `src/sync/auth.ts` |
 | Is all collected data encrypted in transit? | **Yes** | HTTPS only; `usesCleartextTraffic=false` |
-| Can users request that data be deleted? | **Yes** — in-app and via `https://adultingos.app/delete-account` | `settings/delete-account.tsx`, `delete-account` function, public page |
+| Can users request that data be deleted? | **Yes** — in-app (immediate) and explained at `https://patkyu.github.io/animated-octo-carnival-adultingos/delete-account/` | `settings/delete-account.tsx`, `delete-account` function, public page; inactive no-sign-in accounts auto-deleted after 12 months |
 | Data shared with third parties? | **No sharing** in Play's sense; processors (Supabase, Anthropic) act on our behalf | Play treats service providers as not "sharing" |
 
 ## Data types

@@ -37,10 +37,10 @@ export const SUPABASE_ANON_KEY = extra.supabaseAnonKey || process.env.EXPO_PUBLI
 /** False in builds without backend credentials: the app runs fully local and says so. */
 export const BACKEND_CONFIGURED = !!SUPABASE_URL && !!SUPABASE_ANON_KEY && !IS_DEMO;
 export const GOOGLE_WEB_CLIENT_ID = extra.googleWebClientId ?? '';
-export const SUPPORT_EMAIL = extra.supportEmail ?? 'support@adultingos.app';
-export const PRIVACY_URL = extra.privacyPolicyUrl ?? 'https://adultingos.app/privacy';
-export const TERMS_URL = extra.termsUrl ?? 'https://adultingos.app/terms';
-export const DELETION_URL = extra.accountDeletionUrl ?? 'https://adultingos.app/delete-account';
+export const SUPPORT_EMAIL = extra.supportEmail || 'work.patkyu@gmail.com';
+export const PRIVACY_URL = extra.privacyPolicyUrl ?? 'https://patkyu.github.io/animated-octo-carnival-adultingos/privacy/';
+export const TERMS_URL = extra.termsUrl ?? 'https://patkyu.github.io/animated-octo-carnival-adultingos/terms/';
+export const DELETION_URL = extra.accountDeletionUrl ?? 'https://patkyu.github.io/animated-octo-carnival-adultingos/delete-account/';
 export const APP_VERSION = Constants.expoConfig?.version ?? '1.0.0';
 
 /** Flags the server may switch on remotely. Safety-related flags are build-time only. */

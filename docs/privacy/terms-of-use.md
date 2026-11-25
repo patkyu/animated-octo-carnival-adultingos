@@ -1,8 +1,8 @@
-# AdultingOS Terms of Use (draft)
+# AdultingOS Terms of Use
 
-_Version 2026-11-draft · Effective [effective date — set at launch]_
+_Version 2026-11-25 · Effective November 25, 2026_
 
-> Generated from apps/mobile/src/content/legal.ts — edit there. Requires legal and DPO review before publication.
+> Generated from apps/mobile/src/content/legal.ts — edit there. Published at https://patkyu.github.io/animated-octo-carnival-adultingos/privacy/ and /terms/. Have it reviewed by a lawyer before public launch.
 
 ## The service
 
@@ -40,8 +40,8 @@ You can stop using AdultingOS and delete your account at any time in Settings. W
 
 ## Liability
 
-To the extent permitted by Philippine law, AdultingOS is provided "as is" and we are not liable for indirect losses or for missed deadlines. [Counsel to complete.]
+To the extent permitted by Philippine law, AdultingOS is provided "as is" and we are not liable for indirect losses or for missed deadlines.
 
 ## Governing law and contact
 
-These terms are governed by the laws of the Republic of the Philippines. Contact: [support e-mail address].
+These terms are governed by the laws of the Republic of the Philippines. Contact: Patricia Mae Quitoriano, work.patkyu@gmail.com.

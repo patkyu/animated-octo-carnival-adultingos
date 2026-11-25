@@ -20,7 +20,7 @@ Legend: ✅ done in this repository · 🟡 prepared, needs a human/credential �
 - 🟡 AI-generated content: in-app reporting ✅ (Report this answer), labelling ✅, moderation ✅ (provider safeguards + output filter) — declare in Console
 
 ## Privacy and user data
-- 🟡 Public HTTPS privacy policy — generated (`apps/web-public/dist/privacy`) — **needs legal/DPO review and hosting**
+- ✅ Public HTTPS privacy policy — https://patkyu.github.io/animated-octo-carnival-adultingos/privacy/ (GitHub Pages); account deletion page https://patkyu.github.io/animated-octo-carnival-adultingos/delete-account/ — 🟡 still recommended: lawyer review before public launch
 - ✅ In-app privacy policy and terms (Settings → Privacy)
 - ✅ Data safety mapping — `docs/privacy/data-safety-worksheet.md`
 - 🟡 Public account deletion URL — page built (`apps/web-public/dist/delete-account`), needs hosting + `config.js`

@@ -21,7 +21,7 @@ The app uses **no-sign-in accounts** (Supabase anonymous users): no e-mail, pass
 - Rate limit for anonymous users: default 30 per hour per IP (Authentication → Rate Limits). Turn on CAPTCHA (Turnstile/hCaptcha) if abuse appears.
 - Inactive anonymous accounts (12 months without sign-in/refresh) are deleted by `run_retention()` (migration `20261127000100`).
 - Optional later — e-mail/Google sign-in (flag `account_sign_in`): needs the Email provider ON with confirmations, minimum password length 8, and custom SMTP (see below).
-- Redirect URLs: `adultingos://auth-callback`, `adultingos://reset-password`, `https://adultingos.app/delete-account`.
+- Redirect URLs: `adultingos://auth-callback`, `adultingos://reset-password`.
 - Google: create an OAuth **Web** client in Google Cloud; add Supabase's callback URL; put client id/secret in Auth → Providers → Google. (The app uses Supabase's PKCE browser flow, so no Android OAuth client or SHA-1 is needed for this flow.)
 - Rate limits: keep Supabase defaults or stricter for sign-up/OTP.
 

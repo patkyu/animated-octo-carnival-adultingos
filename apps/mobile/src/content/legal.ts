@@ -5,6 +5,10 @@
  * reviewed by qualified Philippine counsel and a Data Protection Officer before
  * release; bracketed items are placeholders to be completed by the operator.
  */
+export const OPERATOR = 'Patricia Mae Quitoriano';
+export const CONTACT_EMAIL = 'work.patkyu@gmail.com';
+export const SITE_URL = 'https://patkyu.github.io/animated-octo-carnival-adultingos';
+
 export interface LegalDoc {
   title: string;
   version: string;
@@ -13,15 +17,15 @@ export interface LegalDoc {
 }
 
 export const PRIVACY_POLICY: LegalDoc = {
-  title: 'AdultingOS Privacy Policy (draft)',
-  version: '2026-11-draft',
-  effective: '[effective date — set at launch]',
+  title: 'AdultingOS Privacy Policy',
+  version: '2026-11-25',
+  effective: 'November 25, 2026',
   sections: [
     {
       heading: 'Who we are',
       body: [
-        'AdultingOS ("we") is an independent personal organization app operated by [legal entity name and address]. We are not affiliated with, endorsed by, or operated by the Philippine government or any government agency.',
-        'Data Protection Officer: [name], [dpo e-mail address]. You may also contact the National Privacy Commission of the Philippines.',
+        `AdultingOS ("we") is an independent personal organization app operated by ${OPERATOR}, an individual developer. We are not affiliated with, endorsed by, or operated by the Philippine government or any government agency.`,
+        `Contact and Data Protection Officer: ${OPERATOR}, ${CONTACT_EMAIL}. You may also contact the National Privacy Commission of the Philippines.`,
       ],
     },
     {
@@ -56,7 +60,7 @@ export const PRIVACY_POLICY: LegalDoc = {
     {
       heading: 'Who we share it with',
       body: [
-        'Service providers acting on our instructions: Supabase (database, authentication and server functions; hosting region Tokyo, Japan (ap-northeast-1)), and our AI provider, Anthropic, which processes Ask Adu messages to generate answers. [Add the actual crash-reporting or analytics provider here if one is enabled; none is included in this version.]',
+        'Service providers acting on our instructions: Supabase (database, authentication and server functions; hosting region Tokyo, Japan (ap-northeast-1)), and our AI provider, Anthropic, which processes Ask Adu messages to generate answers. This version of the app uses no crash-reporting, analytics or advertising services.',
         'Authorities, only when required by law.',
         'Notifications are generated on your phone; reminder content is not sent to a push service.',
       ],
@@ -72,14 +76,14 @@ export const PRIVACY_POLICY: LegalDoc = {
       heading: 'Retention',
       body: [
         'Your records are kept while your account exists. Because there is no sign-in, an account cannot be recovered once the app is uninstalled or its data is cleared; accounts with no activity for 12 months are deleted automatically with all their data. Deleted records are removed from sync within 90 days. AI conversations idle for 12 months are deleted automatically, and you can delete them any time. Audit logs (which contain no content) are kept for 24 months.',
-        'When you delete your account, your personal data is deleted immediately from our database; backups are overwritten within [30] days. We keep a record that a deletion happened (without your identity) and the text of feedback or reports you sent, with your identity removed.',
+        'When you delete your account, your personal data is deleted immediately from our database; backups are overwritten within 30 days. We keep a record that a deletion happened (without your identity) and the text of feedback or reports you sent, with your identity removed.',
       ],
     },
     {
       heading: 'Your rights',
       body: [
         'Under the Data Privacy Act you may be informed, access, correct, object, have your data erased or blocked, receive a copy (data portability), and file a complaint with the National Privacy Commission.',
-        'In the app: edit your profile and records at any time; Settings → Export my data (JSON and CSV); Settings → Privacy to withdraw AI consent or delete AI history; Settings → Delete account. If you no longer have the app, your account can no longer be used by anyone and is deleted automatically after 12 months of inactivity; you can also contact us at [dpo e-mail address] through [https://adultingos.app/delete-account].',
+        `In the app: edit your profile and records at any time; Settings → Export my data (JSON and CSV); Settings → Privacy to withdraw AI consent or delete AI history; Settings → Delete account. If you no longer have the app, your account can no longer be used by anyone and is deleted automatically after 12 months of inactivity. For any other request, see ${SITE_URL}/delete-account/ or e-mail ${CONTACT_EMAIL}.`,
       ],
     },
     {
@@ -94,9 +98,9 @@ export const PRIVACY_POLICY: LegalDoc = {
 };
 
 export const TERMS: LegalDoc = {
-  title: 'AdultingOS Terms of Use (draft)',
-  version: '2026-11-draft',
-  effective: '[effective date — set at launch]',
+  title: 'AdultingOS Terms of Use',
+  version: '2026-11-25',
+  effective: 'November 25, 2026',
   sections: [
     { heading: 'The service', body: ['AdultingOS helps you organize personal responsibilities: tasks, bills, document renewals, subscriptions and reminders, with general guides and an AI assistant. You must be 18 or older to use it.'] },
     {
@@ -115,8 +119,8 @@ export const TERMS: LegalDoc = {
     { heading: 'Acceptable use', body: ['Do not misuse the service, attempt to access other users\' data, overload or reverse-engineer it, or use Ask Adu to create harmful content.'] },
     { heading: 'Availability', body: ['We work to keep AdultingOS available, but features such as sync and Ask Adu may be interrupted. Your data stays usable on your device.'] },
     { heading: 'Ending your use', body: ['You can stop using AdultingOS and delete your account at any time in Settings. We may suspend accounts that break these terms.'] },
-    { heading: 'Liability', body: ['To the extent permitted by Philippine law, AdultingOS is provided "as is" and we are not liable for indirect losses or for missed deadlines. [Counsel to complete.]'] },
-    { heading: 'Governing law and contact', body: ['These terms are governed by the laws of the Republic of the Philippines. Contact: [support e-mail address].'] },
+    { heading: 'Liability', body: ['To the extent permitted by Philippine law, AdultingOS is provided "as is" and we are not liable for indirect losses or for missed deadlines.'] },
+    { heading: 'Governing law and contact', body: [`These terms are governed by the laws of the Republic of the Philippines. Contact: ${OPERATOR}, ${CONTACT_EMAIL}.`] },
   ],
 };
 

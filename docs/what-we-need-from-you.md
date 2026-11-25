@@ -9,8 +9,8 @@ Everything the code can do without your accounts, keys or decisions is done and 
 | 2 | ✅ **Anthropic API key** — done (Supabase secret), verified with live answers | Ask Adu | — |
 | 3 | ✅ **No e-mail/SMTP needed** — the app now uses no-sign-in (anonymous) accounts; enabled on the dev project. For the production project: turn on *Allow anonymous sign-ins* and turn off the Email provider (`docs/deployment/backend.md` §3) | — | Supabase dashboard |
 | 3a | *(Optional, later)* SMTP + Google OAuth only if you want e-mail/Google sign-in for account recovery (flag `account_sign_in`) | Lets people recover their account on a new phone | Supabase dashboard |
-| 4 | **Support e-mail address** | In-app contact, store listing, privacy policy | `EXPO_PUBLIC_SUPPORT_EMAIL` |
-| 5 | **Domain** (e.g. adultingos.site, which you have in GoDaddy) + static hosting | Play requires a public privacy policy URL and an account-deletion URL | Host `apps/web-public/dist` |
+| 4 | ✅ **Support e-mail** — work.patkyu@gmail.com (app, policy, store listing) | — | — |
+| 5 | ✅ **Public privacy policy + deletion page** — live on GitHub Pages (https://patkyu.github.io/animated-octo-carnival-adultingos/privacy/). Optional later: your own domain | Play requires them | `docs/deployment/public-site.md` |
 
 ## 2. Google Play
 | # | Item | Why |
@@ -25,7 +25,7 @@ Everything the code can do without your accounts, keys or decisions is done and 
 | # | Item | Why |
 |---|---|---|
 | 11 | **A content reviewer** to verify the 9 government guides against official sites and publish them in the admin portal | I couldn't reach any .gov.ph site; unverified guides stay hidden in production. Without this, launch with general guides only |
-| 12 | **Lawyer / Data Protection Officer** review of the privacy policy and terms; fill the bracketed placeholders (legal entity, address, DPO contact, hosting region, backup retention) | Data Privacy Act compliance |
+| 12 | **Lawyer review** of the privacy policy and terms (operator, contact and dates are filled in; recommended before the public launch) | Data Privacy Act compliance |
 | 13 | **Native Filipino speaker** — or decide to launch English-only | Filipino currently covers navigation/onboarding only |
 | 14 | Name/trademark/domain availability check for "AdultingOS" | Brand guidelines require it before launch |
 

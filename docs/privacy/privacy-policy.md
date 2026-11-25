@@ -1,14 +1,14 @@
-# AdultingOS Privacy Policy (draft)
+# AdultingOS Privacy Policy
 
-_Version 2026-11-draft · Effective [effective date — set at launch]_
+_Version 2026-11-25 · Effective November 25, 2026_
 
-> Generated from apps/mobile/src/content/legal.ts — edit there. Requires legal and DPO review before publication.
+> Generated from apps/mobile/src/content/legal.ts — edit there. Published at https://patkyu.github.io/animated-octo-carnival-adultingos/privacy/ and /terms/. Have it reviewed by a lawyer before public launch.
 
 ## Who we are
 
-AdultingOS ("we") is an independent personal organization app operated by [legal entity name and address]. We are not affiliated with, endorsed by, or operated by the Philippine government or any government agency.
+AdultingOS ("we") is an independent personal organization app operated by Patricia Mae Quitoriano, an individual developer. We are not affiliated with, endorsed by, or operated by the Philippine government or any government agency.
 
-Data Protection Officer: [name], [dpo e-mail address]. You may also contact the National Privacy Commission of the Philippines.
+Contact and Data Protection Officer: Patricia Mae Quitoriano, work.patkyu@gmail.com. You may also contact the National Privacy Commission of the Philippines.
 
 ## What we collect
 
@@ -46,7 +46,7 @@ We process your information to provide the service you request (contract), with 
 
 ## Who we share it with
 
-Service providers acting on our instructions: Supabase (database, authentication and server functions; hosting region Tokyo, Japan (ap-northeast-1)), and our AI provider, Anthropic, which processes Ask Adu messages to generate answers. [Add the actual crash-reporting or analytics provider here if one is enabled; none is included in this version.]
+Service providers acting on our instructions: Supabase (database, authentication and server functions; hosting region Tokyo, Japan (ap-northeast-1)), and our AI provider, Anthropic, which processes Ask Adu messages to generate answers. This version of the app uses no crash-reporting, analytics or advertising services.
 
 Authorities, only when required by law.
 
@@ -62,13 +62,13 @@ No system is perfectly secure. We will notify affected users and the National Pr
 
 Your records are kept while your account exists. Because there is no sign-in, an account cannot be recovered once the app is uninstalled or its data is cleared; accounts with no activity for 12 months are deleted automatically with all their data. Deleted records are removed from sync within 90 days. AI conversations idle for 12 months are deleted automatically, and you can delete them any time. Audit logs (which contain no content) are kept for 24 months.
 
-When you delete your account, your personal data is deleted immediately from our database; backups are overwritten within [30] days. We keep a record that a deletion happened (without your identity) and the text of feedback or reports you sent, with your identity removed.
+When you delete your account, your personal data is deleted immediately from our database; backups are overwritten within 30 days. We keep a record that a deletion happened (without your identity) and the text of feedback or reports you sent, with your identity removed.
 
 ## Your rights
 
 Under the Data Privacy Act you may be informed, access, correct, object, have your data erased or blocked, receive a copy (data portability), and file a complaint with the National Privacy Commission.
 
-In the app: edit your profile and records at any time; Settings → Export my data (JSON and CSV); Settings → Privacy to withdraw AI consent or delete AI history; Settings → Delete account. If you no longer have the app, your account can no longer be used by anyone and is deleted automatically after 12 months of inactivity; you can also contact us at [dpo e-mail address] through [https://adultingos.app/delete-account].
+In the app: edit your profile and records at any time; Settings → Export my data (JSON and CSV); Settings → Privacy to withdraw AI consent or delete AI history; Settings → Delete account. If you no longer have the app, your account can no longer be used by anyone and is deleted automatically after 12 months of inactivity. For any other request, see https://patkyu.github.io/animated-octo-carnival-adultingos/delete-account/ or e-mail work.patkyu@gmail.com.
 
 ## Children
 

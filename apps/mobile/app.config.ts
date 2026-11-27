@@ -12,7 +12,7 @@ const config: ExpoConfig = {
   name: isProd ? 'AdultingOS' : APP_ENV === 'demo' ? 'AdultingOS Demo' : 'AdultingOS Dev',
   slug: 'adultingos',
   scheme: 'adultingos',
-  version: '1.0.0',
+  version: '1.0.1',
   orientation: 'portrait',
   icon: './assets/icon.png',
   userInterfaceStyle: 'automatic',
@@ -21,7 +21,7 @@ const config: ExpoConfig = {
   android: {
     // Proposed id — confirm availability in Play Console before the first upload.
     package: isProd ? 'com.adultingos.app' : `com.adultingos.app.${APP_ENV === 'demo' ? 'demo' : 'dev'}`,
-    versionCode: 1,
+    versionCode: 2,
     adaptiveIcon: {
       foregroundImage: './assets/adaptive-icon.png',
       monochromeImage: './assets/adaptive-icon-monochrome.png',
@@ -72,6 +72,7 @@ const config: ExpoConfig = {
   web: { favicon: './assets/favicon.png', bundler: 'metro', output: 'single' },
   plugins: [
     './plugins/withReleaseSigning',
+    './plugins/withOptionalFeatures',
     'expo-router',
     'expo-sqlite',
     'expo-secure-store',
@@ -92,7 +93,9 @@ const config: ExpoConfig = {
           compileSdkVersion: 37,
           targetSdkVersion: 36,
           minSdkVersion: 24,
-          buildArchs: ['arm64-v8a', 'x86_64'],
+          // All four ABIs: 32-bit armeabi-v7a is needed for Android Go / budget phones (e.g. Poco C61, Redmi A-series).
+          // Play delivers only the matching ABI from the AAB, so download size stays small.
+          buildArchs: ['armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'],
           enableMinifyInReleaseBuilds: true,
           enableShrinkResourcesInReleaseBuilds: true,
           usesCleartextTraffic: false,

@@ -85,6 +85,8 @@ Found while testing: web exports didn't receive the backend settings (Expo embed
 | Security testing beyond automated checks (pen test) | Out of scope for this environment | Recommended before launch |
 
 ## Android build
+**1.0.1 (versionCode 2, 2026-11-27) — device compatibility fix:** a tester's **Poco C61** (Android 14 Go, 32-bit userspace) was shown "not compatible". Cause: only 64-bit native code was built. Now all four ABIs (`armeabi-v7a`, `arm64-v8a`, `x86`, `x86_64`), and Wi-Fi / portrait screen / touchscreen are declared optional (`plugins/withOptionalFeatures.js`). Verified with `aapt2 dump badging`: minSdk 24 (Android 7.0), native-code all four ABIs, all features `not-required`; signed with the upload key; 16 KB compatible. AAB 76 MB (Play delivers only the device's ABI).
+
 **Upload-signed release (2026-11-25):** `release/adultingos-1.0.0-vc1-upload-signed.aab` (46.1 MB) — signed with the Play upload key (CN=Patricia Mae Quitoriano, O=AdultingOS; SHA-1 `89:F5:8B:E7:…:99:9B`), verified with `jarsigner`/`apksigner`; `com.adultingos.app` 1.0.0 (versionCode 1), targetSdk 36; connected to the Supabase project `vmjinibzebnzaplbqjgb`; 16 KB compatible; no secret keys in the bundle. The table below describes the earlier debug-signed build.
 
 | Item | Result |
